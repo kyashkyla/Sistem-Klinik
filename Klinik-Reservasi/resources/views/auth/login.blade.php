@@ -17,85 +17,82 @@
         /* BAGIAN ATAS */
         .header {
             background-color: #007a79;
-            height: 250px;
+            height: 280px;
             width: 100%;
             position: relative;
             display: flex;
             align-items: center;
-            justify-content: start;
-            padding-left: 60px;
+            padding-left: 90px;
             color: white;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 600;
         }
 
-        .header .curve {
+        .curve-left {
             position: absolute;
             left: 0;
             top: 0;
-            width: 180px;
+            width: 170px;
             height: 100%;
             background: white;
-            border-bottom-right-radius: 100px;
-            border-top-right-radius: 100px;
+            border-bottom-right-radius: 120px;
+            border-top-right-radius: 120px;
         }
 
-        .header .logo {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header .logo-circle {
+        .logo-circle {
             background: white;
             color: #007a79;
             border-radius: 50%;
-            width: 55px;
-            height: 55px;
+            width: 65px;
+            height: 65px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            font-weight: bold;
+            font-size: 35px;
+            font-weight: 900;
+            margin-right: 12px;
+            z-index: 10;
         }
 
-        /* KOTAK LOGIN */
-        .login-section {
-            width: 100%;
-            margin-top: -40px;
-            background-color: #007a79;
+        /* BAGIAN LOGIN */
+        .login-card {
+            background: #007a79;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 30px;
+            padding-bottom: 80px;
         }
 
-        .login-section h2 {
+        .login-title {
             color: white;
-            font-size: 30px;
+            font-size: 32px;
             font-weight: bold;
+            margin-top: 20px;
         }
 
-        .login-box {
-            margin: 25px auto;
-            width: 310px;
+        /* KOTAK FORM */
+        .form-box {
+            margin: 20px auto;
+            width: 330px;
+            padding: 20px 15px;
         }
 
-        .input-group {
+        .input-wrapper {
             background: white;
-            border-radius: 30px;
+            border-radius: 25px;
             padding: 10px 15px;
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            height: 45px;
         }
 
-        .input-group i {
-            font-size: 20px;
+        .input-wrapper i {
+            font-size: 18px;
             color: #007a79;
             margin-right: 12px;
         }
 
-        .input-group input {
+        .input-wrapper input {
             border: none;
             width: 100%;
             font-size: 14px;
@@ -103,32 +100,35 @@
             background: transparent;
         }
 
+        /* SIGNUP */
         .signup-text {
             color: white;
             font-size: 13px;
-            margin-top: -10px;
-            margin-bottom: 15px;
+            margin-top: -7px;
+            margin-bottom: 18px;
         }
 
         .signup-text a {
-            color: #d3fdfb;
+            color: #c9fdfd;
             text-decoration: none;
             font-weight: bold;
         }
 
+        /* TOMBOL LOGIN */
         .login-btn {
             background: white;
             border: none;
             padding: 10px 40px;
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #007a79;
             cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
         .login-btn:hover {
-            background: #e8e8e8;
+            background: #e6e6e6;
         }
     </style>
 </head>
@@ -137,27 +137,29 @@
 
     <!-- BAGIAN ATAS -->
     <div class="header">
-        <div class="curve"></div>
-        <div class="logo">
+        <div class="curve-left"></div>
+
+        <div style="display: flex; align-items: center; z-index: 10;">
             <div class="logo-circle">+</div>
             Klinik Sejahtera
         </div>
     </div>
 
     <!-- FORM LOGIN -->
-    <div class="login-section">
-        <h2>Login</h2>
+    <div class="login-card">
 
-        <div class="login-box">
+        <div class="login-title">Login</div>
+
+        <div class="form-box">
             <form action="/login" method="POST">
                 @csrf
 
-                <div class="input-group">
+                <div class="input-wrapper">
                     <i class="bi bi-person"></i>
                     <input type="text" name="email" placeholder="username" required>
                 </div>
 
-                <div class="input-group">
+                <div class="input-wrapper">
                     <i class="bi bi-lock"></i>
                     <input type="password" name="password" placeholder="password" required>
                 </div>
@@ -167,6 +169,7 @@
                 </p>
 
                 <button class="login-btn" type="submit">Login</button>
+
             </form>
         </div>
 
