@@ -15,30 +15,33 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
-
-            $user = Auth::user();
-
-            switch ($user->role) {
-                case 'dokter':
-                    return redirect()->route('dokter.dashboard');
-
-                case 'admin':
-                    return redirect()->route('admin.dashboard');
-
-                case 'pasien':
-                default:
-                    return redirect()->route('pasien.dashboard');
-            }
+        // Coba login pakai tabel users
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return back()->withErrors(['email' => 'Email atau password salah']);
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah'
-        ]);
+        // Ambil user berhasil login
+        $user = Auth::user();
+
+        // Redirect sesuai role
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'dokter') {
+            return redirect()->route('dokter.dashboard');
+        }
+
+        return redirect()->route('pasien.dashboard');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }
