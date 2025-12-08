@@ -2,15 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-class HasilKunjunganController extends Controller
-{
-    //
-}
-
-namespace App\Http\Controllers;
-
 use App\Models\HasilKunjungan;
 use App\Models\Reservasi;
 use Illuminate\Http\Request;

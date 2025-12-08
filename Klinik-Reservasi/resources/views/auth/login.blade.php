@@ -22,21 +22,21 @@
             position: relative;
             display: flex;
             align-items: center;
-            padding-left: 90px;
+            justify-content: center; 
             color: white;
             font-size: 30px;
             font-weight: 600;
         }
 
+        .header-content {
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* HAPUS OBJEK PUTIH KIRI */
         .curve-left {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 170px;
-            height: 100%;
-            background: white;
-            border-bottom-right-radius: 120px;
-            border-top-right-radius: 120px;
+            display: none;
         }
 
         .logo-circle {
@@ -51,7 +51,6 @@
             font-size: 35px;
             font-weight: 900;
             margin-right: 12px;
-            z-index: 10;
         }
 
         /* BAGIAN LOGIN */
@@ -135,17 +134,15 @@
 
 <body>
 
-    <!-- BAGIAN ATAS -->
+    <!-- HEADER -->
     <div class="header">
-        <div class="curve-left"></div>
-
-        <div style="display: flex; align-items: center; z-index: 10;">
+        <div class="header-content">
             <div class="logo-circle">+</div>
-            Klinik Sejahtera
+            <span>Klinik Sejahtera</span>
         </div>
     </div>
 
-    <!-- FORM LOGIN -->
+    <!-- LOGIN FORM -->
     <div class="login-card">
 
         <div class="login-title">Login</div>
@@ -156,7 +153,7 @@
 
                 <div class="input-wrapper">
                     <i class="bi bi-person"></i>
-                    <input type="text" name="email" placeholder="username" required>
+                    <input type="email" name="email" placeholder="email" required>
                 </div>
 
                 <div class="input-wrapper">

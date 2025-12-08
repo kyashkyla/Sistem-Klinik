@@ -10,9 +10,19 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+
+        // === WAJIB (Laravel 11/12 tidak otomatis)
+        $middleware->alias([
+            'auth'  => \Illuminate\Auth\Middleware\Authenticate::class,
+            'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
+
+            // === custom middleware kamu
+            'doctor' => \App\Http\Middleware\IsDoctor::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();
