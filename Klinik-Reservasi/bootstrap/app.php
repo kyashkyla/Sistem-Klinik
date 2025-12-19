@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             // === custom middleware kamu
             'doctor' => \App\Http\Middleware\IsDoctor::class,
             'pasien' => \App\Http\Middleware\PasienMiddleware::class,
-            'admin'  => \App\Http\Middleware\AdminMiddleware::class,
+            'staff'  => \App\Http\Middleware\StaffMiddleware::class,
         ]);
 
     })

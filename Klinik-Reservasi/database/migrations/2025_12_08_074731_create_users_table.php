@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('password');
 
-            // role: admin, dokter, pasien
-            $table->enum('role', ['admin','dokter','pasien'])->default('pasien');
+            // role: staff, dokter, pasien
+            $table->enum('role', ['staff','dokter','pasien'])->default('pasien');
 
             // hanya dokter
             $table->string('spesialis')->nullable();

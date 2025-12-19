@@ -15,13 +15,13 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'name' => 'Admin Klinik',
-                'email' => 'admin@example.com',
+                'name' => 'Staff Klinik',
+                'email' => 'staff@example.com',
                 'password' => Hash::make('password'),
-                'role' => 'admin',
+                'role' => 'staff',
                 'spesialis' => null,
                 'no_hp' => '081234567890',
-                'alamat' => 'Alamat Admin',
+                'alamat' => 'Alamat Staff',
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dokter\DashboardDokterController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StaffKlinikDashboardController;
 use App\Http\Controllers\HasilKunjunganController;
 
 Route::resource('hasil_kunjungan', HasilKunjunganController::class);
@@ -43,10 +43,24 @@ Route::prefix('dokter')
             ->name('dokter.kunjungan.store');
     });
 
-// ===== ADMIN =====
-Route::get('/admin/dashboard', [AdminController::class, 'index'])
-    ->middleware(['auth', 'admin'])
-    ->name('admin.dashboard');
+// ===== STAFF =====
+Route::middleware(['auth', 'staff'])->prefix('staff_klinik')->name('staff.')->group(function () {
+
+    Route::get('/dashboard', [StaffKlinikDashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::get('/reservasi', [StaffReservasiController::class, 'index'])
+        ->name('reservasi');
+
+    Route::get('/jadwal', [StaffJadwalController::class, 'index'])
+        ->name('jadwal');
+
+    Route::get('/pasien', [StaffPasienController::class, 'index'])
+        ->name('pasien');
+
+    Route::get('/kunjungan', [StaffKunjunganController::class, 'index'])
+        ->name('kunjungan');
+});
 
 // ===== PASIEN =====
 Route::middleware(['auth', 'pasien'])->group(function () {
