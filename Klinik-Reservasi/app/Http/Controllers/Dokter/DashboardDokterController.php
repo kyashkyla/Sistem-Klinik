@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dokter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\Reservasi;
 
 class DashboardDokterController extends Controller
 {
@@ -18,17 +19,22 @@ class DashboardDokterController extends Controller
         return view('dokter.jadwal');
     }
 
+    // ✅ Function reservasi yang benar (mengambil data dari DB)
     public function reservasi()
     {
-        return view('dokter.reservasi');
+        $reservasi = Reservasi::with(['pasien', 'jadwal'])
+            ->where('Status', 'Disetujui')
+            ->orderBy('Tanggal_Reservasi', 'asc')
+            ->get();
+
+        return view('dokter.reservasi', compact('reservasi'));
     }
 
     public function kunjungan()
     {
-        return view('dokter.kunjungan'); // Halaman form
+        return view('dokter.kunjungan'); 
     }
 
-    // ✅ Function untuk menyimpan data kunjungan
     public function storeKunjungan(Request $request)
     {
         $request->validate([

@@ -1,57 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Reservasi;
-use App\Models\Pasien;
-use App\Models\Jadwal;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class ReservasiController extends Controller
+class Reservasi extends Model
 {
-    public function index()
+    use HasFactory;
+
+    protected $table = 'reservasi';
+    protected $primaryKey = 'ID_Reservasi';
+
+    protected $fillable = [
+        'ID_Pasien',
+        'ID_Jadwal',
+        'Tanggal_Reservasi',
+        'Status',
+        'Keterangan',
+    ];
+
+    // Relasi ke Pasien
+    public function pasien()
     {
-        $data = Reservasi::with(['pasien', 'jadwal'])->get();
-        return view('reservasi.index', compact('data'));
+        return $this->belongsTo(Pasien::class, 'ID_Pasien');
     }
 
-    public function create()
+    // Relasi ke Jadwal
+    public function jadwal()
     {
-        $pasien = Pasien::all();
-        $jadwal = Jadwal::all();
-        return view('reservasi.create', compact('pasien', 'jadwal'));
-    }
-
-    public function store(Request $request)
-    {
-        Reservasi::create($request->all());
-        return redirect()->route('reservasi.index');
-    }
-
-    public function show($id)
-    {
-        $data = Reservasi::with(['pasien', 'jadwal'])->findOrFail($id);
-        return view('reservasi.show', compact('data'));
-    }
-
-    public function edit($id)
-    {
-        $data = Reservasi::findOrFail($id);
-        $pasien = Pasien::all();
-        $jadwal = Jadwal::all();
-        return view('reservasi.edit', compact('data', 'pasien', 'jadwal'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $data = Reservasi::findOrFail($id);
-        $data->update($request->all());
-        return redirect()->route('reservasi.index');
-    }
-
-    public function destroy($id)
-    {
-        Reservasi::destroy($id);
-        return redirect()->route('reservasi.index');
+        return $this->belongsTo(Jadwal::class, 'ID_Jadwal');
     }
 }

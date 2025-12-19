@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Kunjungan Pasien - Klinik Sejahtera</title>
+    <title>Reservasi Pasien - Klinik Sejahtera</title>
 
     <style>
         body {
@@ -42,12 +42,8 @@
             font-weight: 900;
         }
 
-        .profile-icon svg {
-            fill: white;
-        }
-
-        .form-container {
-            max-width: 550px;
+        .content-container {
+            max-width: 750px;
             background: white;
             margin: 35px auto 120px;
             padding: 25px;
@@ -61,50 +57,36 @@
             margin-bottom: 25px;
         }
 
-        label {
-            font-weight: bold;
-            color: #00838f;
-        }
-
-        input, textarea, select, button {
-            font-family: Arial, sans-serif !important;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            font-family: Arial, sans-serif !important;
-        }
-
-        input, textarea, select {
+        table {
             width: 100%;
-            padding: 11px 18px;
-            border-radius: 10px;
-            margin-top: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #bbb;
-            font-size: 15px;
-            box-sizing: border-box;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        textarea {
-            height: 90px;
-        }
-
-        button {
-            width: 100%;
+        table th {
             background: #0097a7;
-            padding: 14px;
-            border: none;
             color: white;
-            font-size: 17px;
-            border-radius: 10px;
-            cursor: pointer;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status {
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 8px;
             font-weight: bold;
         }
 
-        button:hover {
-            background: #007d8a;
-        }
+        .pending { background: #fff3cd; color: #856404; }
+        .disetujui { background: #d4edda; color: #155724; }
+        .dibatalkan { background: #f8d7da; color: #721c24; }
 
         .bottom-nav {
             position: fixed;
@@ -125,11 +107,11 @@
             font-weight:600;
         }
 
-        .bottom-nav img, .bottom-nav svg {
+        .bottom-nav svg {
             width:26px;
             display:block;
             margin:auto;
-            filter: brightness(0) invert(1);
+            fill: white;
         }
     </style>
 </head>
@@ -151,47 +133,61 @@
         </div>
     </div>
 
- <div class="form-container">
-    <h2>Hasil Kunjungan Pasien</h2>
+    <!-- TABEL RESERVASI -->
+    <div class="content-container">
+        <h2>Daftar Reservasi Pasien</h2>
 
-    <form action="{{ route('dokter.kunjungan.store') }}" method="POST">
-        @csrf
+        <table>
+    <thead>
+        <tr>
+            <th>ID Reservasi</th>
+            <th>Nama Pasien</th>
+            <th>Jadwal</th>
+            <th>Tanggal</th>
+            <th>Status</th>
+            <th>Keterangan</th>
+        </tr>
+    </thead>
 
-        <!-- ID Hasil (visual saja, tidak diproses) -->
-        <label>ID Hasil</label>
-        <input type="text" placeholder="Masukkan ID Hasil" disabled>
+    <tbody>
+        @forelse ($reservasi as $r)
+        <tr>
+            <td>{{ $r->ID_Reservasi }}</td>
 
-        <!-- ID Reservasi -->
-        <label>ID Reservasi</label>
-        <input type="text" name="ID_Reservasi" placeholder="Masukkan ID Reservasi" required>
+            <td>{{ $r->pasien->Nama ?? '-' }}</td>
 
-        <!-- Tanggal Kunjungan -->
-        <label>Tanggal Kunjungan</label>
-        <input type="date" name="Tanggal_Kunjungan" required>
+            <td>
+                {{ $r->jadwal->Hari ?? '-' }}
+                ({{ $r->jadwal->Jam_Mulai ?? '' }} - {{ $r->jadwal->Jam_Selesai ?? '' }})
+            </td>
 
-        <!-- Catatan Dokter -->
-        <label>Catatan Dokter</label>
-        <textarea name="Catatan_Dokter"
-            placeholder="Isi catatan"
-            required></textarea>
+            <td>{{ $r->Tanggal_Reservasi }}</td>
 
-        <!-- Tombol -->
-        <div style="display:flex; gap:15px; margin-top:10px;">
-            <button type="submit" style="flex:1;">Simpan</button>
+            <td>
+                <span class="status {{ strtolower($r->Status) }}">
+                    {{ $r->Status }}
+                </span>
+            </td>
 
-            <button type="button"
-                onclick="history.back()"
-                style="
-                    flex:1;
-                    background:white;
-                    color:#0097a7;
-                    border:2px solid #0097a7;
-                ">
-                Batal
-            </button>
-        </div>
-    </form>
-</div>
+            <td>{{ $r->Keterangan ?? '-' }}</td>
+
+            <td>
+                <a href="{{ route('dokter.kunjungan', $r->ID_Reservasi) }}"
+                   style="background:#0097a7; color:white; padding:6px 12px; border-radius:8px; text-decoration:none; font-size:13px;">
+                    Periksa
+                </a>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="7" style="text-align:center; padding:15px; color:#777;">
+                Tidak ada reservasi disetujui.
+            </td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+    </div>
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">

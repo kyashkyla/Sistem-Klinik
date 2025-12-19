@@ -12,14 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
-        // === WAJIB (Laravel 11/12 tidak otomatis)
         $middleware->alias([
             'auth'  => \Illuminate\Auth\Middleware\Authenticate::class,
             'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
 
             // === custom middleware kamu
             'doctor' => \App\Http\Middleware\IsDoctor::class,
-            'pasien' => \App\Http\Middleware\CheckPasien::class,
+            'pasien' => \App\Http\Middleware\PasienMiddleware::class,
             'admin'  => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 
