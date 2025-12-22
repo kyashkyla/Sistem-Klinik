@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Diskon</title>
+    <title>Berita</title>
 
     <style>
         body {
@@ -62,11 +62,9 @@
             color: #0097a7
         }
 
-        .promo {
-            border: 1px dashed #0097a7;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px
+        .news {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0
         }
 
         .bottom-nav {
@@ -113,16 +111,16 @@
     <!-- KONTEN -->
     <div class="wrap">
         <div class="card">
-            <h2>Promo & Diskon</h2>
+            <h2>Berita Klinik</h2>
 
-            <div class="promo">
-                <b>Diskon 20%</b><br>
-                Pemeriksaan Umum
+            <div class="news">
+                <b>Vaksinasi Gratis</b><br>
+                20 Desember 2025
             </div>
 
-            <div class="promo">
-                <b>Gratis Konsultasi</b><br>
-                Pasien Baru
+            <div class="news">
+                <b>Jam Operasional Baru</b><br>
+                15 Desember 2025
             </div>
         </div>
     </div>

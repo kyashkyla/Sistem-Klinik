@@ -114,7 +114,7 @@
         Klinik Sejahtera
     </div>
 
-    <div onclick="location.href='{{ route('profil') }}'">
+    <div onclick="location.href='{{ route('pasien.profil') }}'">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
             <circle cx="12" cy="8" r="4"/>
             <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"/>
@@ -138,7 +138,7 @@
     </div>
 
     <!-- Dokter -->
-    <div class="menu-box" onclick="location.href='{{ route('dokter.jadwal') }}'">
+    <div class="menu-box" onclick="location.href='{{ route('pasien.dokter') }}'">
         <!-- ICON DOKTER (STETOSKOP + ORANG) -->
         <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#00838f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="6" r="3"></circle>
@@ -150,7 +150,7 @@
     </div>
 
   <!-- Gawat Darurat -->
-<div class="menu-box" onclick="location.href='{{ route('darurat') }}'">
+<div class="menu-box" onclick="location.href='{{ route('pasien.darurat') }}'">
     <!-- ICON LAMPU SIRENE -->
     <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#00838f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M7 11V6a5 5 0 0 1 10 0v5"></path>
@@ -166,7 +166,7 @@
 
 
     <!-- Informasi -->
-    <div class="menu-box" onclick="location.href='{{ route('data.umum') }}'">
+    <div class="menu-box" onclick="location.href='{{ route('pasien.informasi') }}'">
         <!-- ICON INFORMASI (HURUF i) -->
         <svg width="70" height="70" viewBox="0 0 24 24" fill="#00838f">
             <circle cx="12" cy="12" r="10"/>
@@ -182,7 +182,7 @@
 <div class="bottom-nav">
 
     <!-- MENU -->
-    <div onclick="location.href='{{ route('home') }}'">
+    <div onclick="location.href='{{ route('pasien.dashboard') }}'">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
             <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
@@ -190,7 +190,7 @@
     </div>
 
     <!-- RIWAYAT -->
-    <div onclick="location.href='{{ route('riwayat.pasien') }}'">
+    <div onclick="location.href='{{ route('pasien.riwayat') }}'">
         <svg width="26" height="26" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="1 4 1 10 7 10"/>
@@ -201,7 +201,7 @@
     </div>
 
     <!-- DISKON -->
-    <div onclick="location.href='{{ route('diskon') }}'">
+    <div onclick="location.href='{{ route('pasien.diskon') }}'">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
             <path d="M3 12l9-9 9 9-9 9z"/>
             <circle cx="9" cy="9" r="2" fill="#0097a7"/>
@@ -212,7 +212,7 @@
     </div>
 
     <!-- BERITA -->
-    <div onclick="location.href='{{ route('berita') }}'">
+    <div onclick="location.href='{{ route('pasien.berita') }}'">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
             <circle cx="12" cy="21" r="2"/>
@@ -221,7 +221,7 @@
     </div>
 
     <!-- SAYA -->
-    <div onclick="location.href='{{ route('profil.pasien') }}'">
+    <div onclick="location.href='{{ route('pasien.profil') }}'">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="10" r="3"/>

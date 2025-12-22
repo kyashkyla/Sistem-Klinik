@@ -3,22 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Diskon</title>
+    <title>Daftar Online</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #eef7f7
+        * {
+            box-sizing: border-box;
         }
 
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef7f7;
+        }
+
+        /* HEADER */
         .header {
             background: #0097a7;
             color: #fff;
             padding: 15px 25px;
             display: flex;
             justify-content: space-between;
-            align-items: center
+            align-items: center;
         }
 
         .logo-box {
@@ -26,7 +31,7 @@
             align-items: center;
             gap: 10px;
             font-size: 22px;
-            font-weight: bold
+            font-weight: bold;
         }
 
         .logo-circle {
@@ -39,13 +44,14 @@
             font-weight: 900;
             display: flex;
             justify-content: center;
-            align-items: center
+            align-items: center;
         }
 
+        /* CONTENT */
         .wrap {
             display: flex;
             justify-content: center;
-            padding: 40px 15px 120px
+            padding: 40px 15px 120px;
         }
 
         .card {
@@ -54,21 +60,52 @@
             width: 100%;
             border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .1)
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
         }
 
         h2 {
             text-align: center;
-            color: #0097a7
+            color: #0097a7;
+            margin-bottom: 20px;
         }
 
-        .promo {
-            border: 1px dashed #0097a7;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+
+
+        textarea {
+            resize: none;
+            height: 70px;
+        }
+
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #0097a7;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* BOTTOM NAV (ASLI) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -76,7 +113,7 @@
             background: #0097a7;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0
+            padding: 10px 0;
         }
 
         .bottom-nav div {
@@ -84,12 +121,11 @@
             text-align: center;
             font-size: 14px;
             font-weight: 600;
-            cursor: pointer
         }
 
         .bottom-nav svg {
             display: block;
-            margin: auto
+            margin: auto;
         }
     </style>
 </head>
@@ -102,28 +138,48 @@
             <div class="logo-circle">+</div>
             Klinik Sejahtera
         </div>
-        <div onclick="location.href='{{ route('pasien.profil') }}'">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z" />
-            </svg>
-        </div>
     </div>
 
-    <!-- KONTEN -->
+    <!-- CONTENT -->
     <div class="wrap">
         <div class="card">
-            <h2>Promo & Diskon</h2>
 
-            <div class="promo">
-                <b>Diskon 20%</b><br>
-                Pemeriksaan Umum
-            </div>
+            <h2>Daftar Online</h2>
 
-            <div class="promo">
-                <b>Gratis Konsultasi</b><br>
-                Pasien Baru
-            </div>
+            <form>
+
+                <label>Nama Pasien</label>
+                <input type="text" placeholder="Nama lengkap">
+
+                <label>Keluhan</label>
+                <textarea placeholder="Tuliskan keluhan singkat"></textarea>
+
+                <label>Pilih Dokter</label>
+                <select>
+                    <option>-- Pilih Dokter --</option>
+                    <option>Dr. Andi (Umum)</option>
+                    <option>Dr. Sinta (Gigi)</option>
+                    <option>Dr. Budi (Anak)</option>
+                </select>
+
+                <label>Tanggal Kunjungan</label>
+                <input type="date">
+
+                <label>Jam Kunjungan</label>
+                <select>
+                    <option>-- Pilih Jam --</option>
+                    <option>08.00 - 09.00</option>
+                    <option>09.00 - 10.00</option>
+                    <option>10.00 - 11.00</option>
+                    <option>13.00 - 14.00</option>
+                </select>
+
+                <button type="submit">
+                    Daftar Sekarang
+                </button>
+
+            </form>
+
         </div>
     </div>
 

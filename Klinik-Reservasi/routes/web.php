@@ -1,8 +1,8 @@
-<?php  
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Dokter\DashboardDokterController;
+use App\Http\Controllers\DashboardDokterController;
 use App\Http\Controllers\StaffKlinikDashboardController;
 use App\Http\Controllers\HasilKunjunganController;
 
@@ -63,38 +63,35 @@ Route::middleware(['auth', 'staff'])->prefix('staff_klinik')->name('staff.')->gr
 });
 
 // ===== PASIEN =====
-Route::middleware(['auth', 'pasien'])->group(function () {
+Route::middleware(['auth', 'pasien'])
+    ->prefix('pasien')
+    ->name('pasien.')
+    ->group(function () {
 
-    Route::get('/pasien/dashboard', fn() => view('pasien.dashboard'))
-        ->name('pasien.dashboard');
+        Route::get('/dashboard', fn() => view('pasien.dashboard'))
+            ->name('dashboard');
 
-    Route::get('/pasien/profil', fn() => view('pasien.profil'))
-        ->name('profil');
+        Route::get('/jadwal', fn() => view('pasien.jadwal'))
+            ->name('jadwal');
 
-    Route::get('/pasien/jadwal', fn() => view('pasien.jadwal'))
-        ->name('pasien.jadwal');
+        Route::get('/dokter', fn() => view('pasien.dokter'))
+            ->name('dokter');
 
-    Route::get('/pasien/dokter', fn() => view('pasien.dokter'))
-        ->name('pasien.dokter');
+        Route::get('/darurat', fn() => view('pasien.darurat'))
+            ->name('darurat');
 
-    Route::get('/pasien/darurat', fn() => view('pasien.darurat'))
-        ->name('darurat');
+        Route::get('/informasi', fn() => view('pasien.informasi'))
+            ->name('informasi');
 
-    Route::get('/pasien/informasi', fn() => view('pasien.informasi'))
-        ->name('data.umum');
+        Route::get('/riwayat', fn() => view('pasien.riwayat'))
+            ->name('riwayat');
 
-    Route::get('/pasien/home', fn() => view('pasien.dashboard'))
-        ->name('home');
+        Route::get('/diskon', fn() => view('pasien.diskon'))
+            ->name('diskon');
 
-    Route::get('/pasien/riwayat', fn() => view('pasien.riwayat'))
-        ->name('riwayat.pasien');
+        Route::get('/berita', fn() => view('pasien.berita'))
+            ->name('berita');
 
-    Route::get('/pasien/diskon', fn() => view('pasien.diskon'))
-        ->name('diskon');
-
-    Route::get('/pasien/berita', fn() => view('pasien.berita'))
-        ->name('berita');
-
-    Route::get('/pasien/akun', fn() => view('pasien.profil'))
-        ->name('profil.pasien');
-});
+        Route::get('/profil', fn() => view('pasien.profil'))
+            ->name('profil');
+    });
