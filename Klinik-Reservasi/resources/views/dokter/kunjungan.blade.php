@@ -159,7 +159,7 @@
 
         <!-- ID Hasil (visual saja, tidak diproses) -->
         <label>ID Hasil</label>
-        <input type="text" placeholder="Masukkan ID Hasil" disabled>
+        <input type="text" placeholder="Masukkan ID Hasil" required>
 
         <!-- ID Reservasi -->
         <label>ID Reservasi</label>

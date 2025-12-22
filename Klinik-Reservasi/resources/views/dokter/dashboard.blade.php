@@ -152,7 +152,7 @@
             <div>Menu</div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.riwayat') }}'">
             <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
                  viewBox="0 0 24 24">
                 <polyline points="1 4 1 10 7 10"/>
@@ -162,11 +162,11 @@
             <div>Riwayat</div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.notifikasi') }}'">
             <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9zM13.73 21a2 2 0 11-3.46 0"/>
             </svg>
-            <div>Berita</div>
+            <div>Notifikasi</div>
         </div>
 
         <div onclick="location.href='{{ route('dokter.dashboard') }}'">

@@ -30,6 +30,9 @@ Route::prefix('dokter')
         Route::get('/dashboard', [DashboardDokterController::class, 'dashboard'])
             ->name('dokter.dashboard');
 
+        Route::get('/riwayat', [DashboardDokterController::class, 'riwayat'])
+            ->name('dokter.riwayat');
+
         Route::get('/jadwal', [DashboardDokterController::class, 'jadwal'])
             ->name('dokter.jadwal');
 
@@ -41,7 +44,11 @@ Route::prefix('dokter')
 
         Route::post('/kunjungan/store', [HasilKunjunganController::class, 'store'])
             ->name('dokter.kunjungan.store');
+
+        Route::get('/notifikasi', [DashboardDokterController::class, 'notifikasi'])
+            ->name('dokter.notifikasi');
     });
+
 
 // ===== STAFF =====
 Route::middleware(['auth', 'staff'])->prefix('staff_klinik')->name('staff.')->group(function () {

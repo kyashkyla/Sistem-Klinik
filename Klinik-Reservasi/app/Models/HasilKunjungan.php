@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class HasilKunjungan extends Model
 {
-    protected $table = 'hasil_kunjungan';
-    protected $primaryKey = 'ID_Hasil';
+    protected $table = 'kunjungan';
+
+    protected $primaryKey = 'ID_Kunjungan';
 
     protected $fillable = [
         'ID_Reservasi',
@@ -15,8 +16,22 @@ class HasilKunjungan extends Model
         'Catatan_Dokter'
     ];
 
+    public $timestamps = false;
+
     public function reservasi()
     {
-        return $this->belongsTo(Reservasi::class, 'ID_Reservasi');
+        return $this->belongsTo(Reservasi::class, 'ID_Reservasi', 'ID_Reservasi');
+    }
+
+    public function pasien()
+    {
+        return $this->hasOneThrough(
+            Pasien::class,
+            Reservasi::class,
+            'ID_Reservasi',
+            'ID_Pasien',
+            'ID_Reservasi',
+            'ID_Pasien'
+        );
     }
 }
