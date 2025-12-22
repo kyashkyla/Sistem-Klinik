@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Jadwal Dokter</title>
+    <title>Verifikasi Reservasi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
@@ -12,6 +12,7 @@
             background-color: #eef7f7;
             padding-bottom: 100px;
         }
+        /* HEADER */
         .header {
             background-color: #0097a7;
             color: #fff;
@@ -38,6 +39,7 @@
             font-size: 30px;
             font-weight: 900;
         }
+        /* CONTENT */
         .container {
             padding: 25px;
         }
@@ -65,6 +67,22 @@
             border-bottom: 1px solid #ddd;
             text-align: center;
         }
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-approve {
+            background: #4caf50;
+            color: white;
+        }
+        .btn-reject {
+            background: #f44336;
+            color: white;
+        }
+        /* BOTTOM NAV (SAMA PERSIS DASHBOARD) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -92,6 +110,7 @@
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
     <div class="logo-box">
         <div class="logo-circle">+</div>
@@ -99,35 +118,47 @@
     </div>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
-    <h2>Jadwal Dokter</h2>
+    <h2>Verifikasi Reservasi Pasien</h2>
 
     <div class="card">
         <table>
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Nama Dokter</th>
-                    <th>Spesialis</th>
-                    <th>Hari</th>
-                    <th>Jam</th>
+                    <th>Pasien</th>
+                    <th>Tanggal</th>
+                    <th>Dokter</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
+            @forelse($reservasis as $r)
                 <tr>
-                    <td>1</td>
-                    <td>Dr. Andi</td>
-                    <td>Umum</td>
-                    <td>Senin</td>
-                    <td>08.00 - 12.00</td>
+                    <td>{{ $r->pasien->name ?? '-' }}</td>
+                    <td>{{ $r->jadwal->tanggal ?? '-' }}</td>
+                    <td>{{ $r->jadwal->dokter->name ?? '-' }}</td>
+                    <td>
+                        <form action="{{ route('staff.verifikasi.update', $r->id) }}" method="POST" style="display:inline">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="status" value="disetujui">
+                            <button class="btn btn-approve">Setujui</button>
+                        </form>
+
+                        <form action="{{ route('staff.verifikasi.update', $r->id) }}" method="POST" style="display:inline">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="status" value="ditolak">
+                            <button class="btn btn-reject">Tolak</button>
+                        </form>
+                    </td>
                 </tr>
+            @empty
                 <tr>
-                    <td>2</td>
-                    <td>Dr. Sinta</td>
-                    <td>Anak</td>
-                    <td>Selasa</td>
-                    <td>10.00 - 14.00</td>
+                    <td colspan="4">Tidak ada reservasi menunggu</td>
                 </tr>
+            @endforelse
             </tbody>
         </table>
     </div>
@@ -160,7 +191,7 @@
         <div>Notifikasi</div>
     </div>
 
-   <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff.dashboard') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

@@ -218,7 +218,7 @@
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z" />
                 <circle cx="12" cy="21" r="2" />
             </svg>
-            Berita
+           Notifikasi
         </div>
 
         <div onclick="location.href='{{ route('pasien.profil') }}'">

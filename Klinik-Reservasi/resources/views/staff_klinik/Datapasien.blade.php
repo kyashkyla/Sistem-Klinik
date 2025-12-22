@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Jadwal Dokter</title>
+    <title>Data Pasien</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
@@ -12,6 +12,7 @@
             background-color: #eef7f7;
             padding-bottom: 100px;
         }
+        /* HEADER */
         .header {
             background-color: #0097a7;
             color: #fff;
@@ -38,6 +39,7 @@
             font-size: 30px;
             font-weight: 900;
         }
+        /* CONTENT */
         .container {
             padding: 25px;
         }
@@ -65,6 +67,22 @@
             border-bottom: 1px solid #ddd;
             text-align: center;
         }
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-detail {
+            background: #0288d1;
+            color: white;
+        }
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -92,6 +110,7 @@
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
     <div class="logo-box">
         <div class="logo-circle">+</div>
@@ -99,35 +118,46 @@
     </div>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
-    <h2>Jadwal Dokter</h2>
+    <h2>Data Pasien</h2>
 
     <div class="card">
         <table>
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Dokter</th>
-                    <th>Spesialis</th>
-                    <th>Hari</th>
-                    <th>Jam</th>
+                    <th>Nama Pasien</th>
+                    <th>Email</th>
+                    <th>No. HP</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Dr. Andi</td>
-                    <td>Umum</td>
-                    <td>Senin</td>
-                    <td>08.00 - 12.00</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Dr. Sinta</td>
-                    <td>Anak</td>
-                    <td>Selasa</td>
-                    <td>10.00 - 14.00</td>
-                </tr>
+
+            {{-- DATA DUMMY (GANTI DENGAN FOREACH DATABASE NANTI) --}}
+            <tr>
+                <td>1</td>
+                <td>Ahmad Fauzi</td>
+                <td>ahmad@gmail.com</td>
+                <td>08123456789</td>
+                <td>
+                    <button class="btn btn-detail">Detail</button>
+                    <button class="btn btn-delete">Hapus</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Siti Aisyah</td>
+                <td>siti@gmail.com</td>
+                <td>08234567890</td>
+                <td>
+                    <button class="btn btn-detail">Detail</button>
+                    <button class="btn btn-delete">Hapus</button>
+                </td>
+            </tr>
+
             </tbody>
         </table>
     </div>
@@ -160,7 +190,7 @@
         <div>Notifikasi</div>
     </div>
 
-   <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff.dashboard') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

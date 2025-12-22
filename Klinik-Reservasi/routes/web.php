@@ -51,23 +51,39 @@ Route::prefix('dokter')
 
 
 // ===== STAFF =====
-Route::middleware(['auth', 'staff'])->prefix('staff_klinik')->name('staff.')->group(function () {
+Route::prefix('staff_klinik')->name('staff.')->group(function () {
 
-    Route::get('/dashboard', [StaffKlinikDashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('staff_klinik.dashboard');
+    })->name('dashboard');
 
-    Route::get('/reservasi', [StaffReservasiController::class, 'index'])
-        ->name('reservasi');
+    // sesuai file: Datapasien.blade.php
+    Route::get('/Datapasien', function () {
+        return view('staff_klinik.Datapasien');
+    })->name('Datapasien');
 
-    Route::get('/jadwal', [StaffJadwalController::class, 'index'])
-        ->name('jadwal');
+    // sesuai file: verifikasi.blade.php
+    Route::get('/verifikasi', function () {
+        $reservasis = []; // biar tidak error
+        return view('staff_klinik.verifikasi', compact('reservasis'));
+    })->name('verifikasi');
 
-    Route::get('/pasien', [StaffPasienController::class, 'index'])
-        ->name('pasien');
+    // sesuai file: jadwaldokter.blade.php
+    Route::get('/jadwaldokter', function () {
+        return view('staff_klinik.jadwaldokter');
+    })->name('jadwaldokter');
 
-    Route::get('/kunjungan', [StaffKunjunganController::class, 'index'])
-        ->name('kunjungan');
+    // sesuai file: kunjungan.blade.php
+    Route::get('/kunjungan', function () {
+        return view('staff_klinik.kunjungan');
+    })->name('kunjungan');
+
+    // sesuai file: riwayat.blade.php
+    Route::get('/riwayat', function () {
+        return view('staff_klinik.riwayat');
+    })->name('riwayat');
 });
+
 
 // ===== PASIEN =====
 Route::middleware(['auth', 'pasien'])

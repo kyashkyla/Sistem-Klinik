@@ -133,7 +133,7 @@
 <div class="menu-container">
 
     <!-- Verifikasi Reservasi -->
-    <div class="menu-box" onclick="alert('Fitur Verifikasi Reservasi belum aktif')">
+    <div class="menu-box" onclick="location.href='{{ route('staff.verifikasi') }}'">
         <div class="menu-icon">
             <svg viewBox="0 0 24 24">
                 <path d="M3 3h18v18H3z" fill="none"/>
@@ -144,7 +144,7 @@
     </div>
 
     <!-- Jadwal Dokter -->
-    <div class="menu-box" onclick="alert('Fitur Jadwal Dokter belum aktif')">
+   <div class="menu-box" onclick="location.href='{{ route('staff.jadwaldokter') }}'">
         <div class="menu-icon">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" fill="none"/>
@@ -155,7 +155,7 @@
     </div>
 
     <!-- Data Pasien -->
-    <div class="menu-box" onclick="alert('Fitur Data Pasien belum aktif')">
+   <div class="menu-box" onclick="location.href='{{ route('staff.Datapasien') }}'">
         <div class="menu-icon">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="8" r="4"/>
@@ -166,7 +166,7 @@
     </div>
 
     <!-- Hasil Kunjungan -->
-<div class="menu-box" onclick="alert('Fitur Hasil Kunjungan belum aktif')">
+<div class="menu-box" onclick="location.href='{{ route('staff.kunjungan') }}'">
     <div class="menu-icon">
         <svg viewBox="0 0 24 24">
             <rect x="5" y="3" width="14" height="18" rx="2" ry="2" fill="none"/>
@@ -189,7 +189,7 @@
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <polyline points="1 4 1 10 7 10"/>
@@ -203,10 +203,10 @@
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        <div>Berita</div>
+        <div>Notifikasi</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>
