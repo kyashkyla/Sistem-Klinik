@@ -10,15 +10,21 @@ class Pasien extends Model
     protected $primaryKey = 'ID_Pasien';
 
     protected $fillable = [
+        'user_id',
         'Nama',
         'Alamat',
         'No_Telepon',
         'Email',
         'Password',
-        'Biodata_Diri'
+        'Biodata_Diri',
     ];
 
     protected $hidden = ['Password'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function reservasi()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -14,13 +15,12 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // ✅ TAMPILKAN HALAMAN REGISTER
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // ✅ PROSES REGISTER
+    // ================= REGISTER =================
     public function register(Request $request)
     {
         $request->validate([
@@ -29,17 +29,30 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        User::create([
+        // 1️⃣ Buat user
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => 'pasien', // 🔐 otomatis pasien
+            'role'     => 'pasien',
+        ]);
+
+        // 2️⃣ Buat data pasien
+        Pasien::create([
+            'user_id'      => $user->id,
+            'Nama'         => $user->name,
+            'Email'        => $user->email,
+            'Alamat'       => '-',
+            'No_Telepon'   => '-',
+            'Password'     => Hash::make($request->password),
+            'Biodata_Diri' => null,
         ]);
 
         return redirect()->route('login')
             ->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
+    // ================= LOGIN =================
     public function login(Request $request)
     {
         $request->validate([

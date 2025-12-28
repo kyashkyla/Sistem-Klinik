@@ -133,23 +133,19 @@
                 </tr>
             </thead>
             <tbody>
-            @forelse($reservasis as $r)
+            @forelse($reservasi as $r)
                 <tr>
-                    <td>{{ $r->pasien->name ?? '-' }}</td>
-                    <td>{{ $r->jadwal->tanggal ?? '-' }}</td>
-                    <td>{{ $r->jadwal->dokter->name ?? '-' }}</td>
+                    <td>{{ $r->pasien->user->name ?? '-' }}</td>
+                    <td>{{ $r->Tanggal_Kunjungan ?? '-' }}</td>
+                    <td>{{ $r->dokter->name ?? '-' }}</td>
                     <td>
-                        <form action="{{ route('staff.verifikasi.update', $r->id) }}" method="POST" style="display:inline">
+                        <form action="{{ route('staff_klinik.approve', $r->ID_Reservasi) }}" method="POST" style="display:inline">
                             @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="disetujui">
                             <button class="btn btn-approve">Setujui</button>
                         </form>
 
-                        <form action="{{ route('staff.verifikasi.update', $r->id) }}" method="POST" style="display:inline">
+                        <form action="{{ route('staff_klinik.reject', $r->ID_Reservasi) }}" method="POST" style="display:inline">
                             @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="ditolak">
                             <button class="btn btn-reject">Tolak</button>
                         </form>
                     </td>
@@ -167,14 +163,14 @@
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
 
-    <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
         <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
             <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff.riwayat') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <polyline points="1 4 1 10 7 10"/>
@@ -184,14 +180,14 @@
         <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
         <div>Notifikasi</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

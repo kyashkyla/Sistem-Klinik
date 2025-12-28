@@ -1,34 +1,49 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use App\Models\Reservasi;
+use App\Models\Jadwal;
+use App\Models\Pasien;
+use Illuminate\Support\Facades\Auth;
 
-class Reservasi extends Model
+class ReservasiController extends Controller
 {
-    use HasFactory;
-
-    protected $table = 'reservasi';
-    protected $primaryKey = 'ID_Reservasi';
-
-    protected $fillable = [
-        'ID_Pasien',
-        'ID_Jadwal',
-        'Tanggal_Reservasi',
-        'Status',
-        'Keterangan',
-    ];
-
-    // Relasi ke Pasien
-    public function pasien()
+    // Form daftar online
+    public function create()
     {
-        return $this->belongsTo(Pasien::class, 'ID_Pasien');
+        $jadwals = Jadwal::all();
+        return view('pasien.daftar-online', compact('jadwals'));
     }
 
-    // Relasi ke Jadwal
-    public function jadwal()
+    // Simpan ke database
+    public function store(Request $request)
     {
-        return $this->belongsTo(Jadwal::class, 'ID_Jadwal');
+        $request->validate([
+            'ID_Jadwal' => 'required|exists:jadwal,ID_Jadwal',
+            'Tanggal_Reservasi' => 'required|date|after_or_equal:today',
+            'Keterangan' => 'nullable|string',
+        ]);
+
+        $user = Auth::user();
+
+        // Ambil pasien berdasarkan user_id
+        $pasien = Pasien::where('user_id', $user->id)->first();
+
+        if (!$pasien) {
+            return back()->with('error', 'Data pasien tidak ditemukan.');
+        }
+
+        Reservasi::create([
+            'ID_Pasien' => $pasien->ID_Pasien,
+            'ID_Jadwal' => $request->ID_Jadwal,
+            'Tanggal_Reservasi' => $request->Tanggal_Reservasi,
+            'Status' => 'Menunggu',
+            'Keterangan' => $request->Keterangan,
+        ]);
+
+        return redirect()->route('pasien.dashboard')
+            ->with('success', 'Reservasi berhasil dibuat!');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -25,15 +26,27 @@ class AuthController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
+            'email'    => 'required|email|unique:users,email|unique:pasien,Email',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        User::create([
+        // 1️⃣ BUAT USER RECORD
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => 'pasien', // 🔐 otomatis pasien
+        ]);
+
+        // 2️⃣ BUAT PASIEN RECORD
+        Pasien::create([
+            'Nama'           => $request->name,
+            'Email'          => $request->email,
+            'Password'       => Hash::make($request->password),
+            'No_Telepon'     => '',
+            'Alamat'         => '',
+            'Biodata_Diri'   => '',
+            'user_id'        => $user->id,
         ]);
 
         return redirect()->route('login')
@@ -53,8 +66,12 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
         if ($user->role === 'staff') {
-            return redirect()->route('staff.dashboard');
+            return redirect()->route('staff_klinik.dashboard');
         }
 
         if ($user->role === 'dokter') {

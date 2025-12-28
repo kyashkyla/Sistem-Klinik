@@ -15,7 +15,8 @@ class Pasien extends Model
         'No_Telepon',
         'Email',
         'Password',
-        'Biodata_Diri'
+        'Biodata_Diri',
+        'user_id'
     ];
 
     protected $hidden = ['Password'];
@@ -23,5 +24,10 @@ class Pasien extends Model
     public function reservasi()
     {
         return $this->hasMany(Reservasi::class, 'ID_Pasien');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

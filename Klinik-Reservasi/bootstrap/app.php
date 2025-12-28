@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
 
             // === custom middleware kamu
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'doctor' => \App\Http\Middleware\IsDoctor::class,
             'pasien' => \App\Http\Middleware\PasienMiddleware::class,
             'staff'  => \App\Http\Middleware\StaffMiddleware::class,

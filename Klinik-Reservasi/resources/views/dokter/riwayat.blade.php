@@ -100,6 +100,22 @@
             cursor: pointer
         }
 
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
+
         .bottom-nav svg {
             display: block;
             margin: auto
@@ -114,12 +130,7 @@
     <div class="logo-box">
         <div class="logo-circle">+</div>Klinik Sejahtera
     </div>
-    <div>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"/>
-        </svg>
-    </div>
+    <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
 </div>
 
 <!-- CONTENT -->
@@ -127,20 +138,21 @@
     <div class="card">
         <h2>Riwayat Pasien Ditangani</h2>
 
-        @foreach ($riwayat as $data)
+        @forelse ($riwayat as $data)
             <div class="item">
                 <div class="pasien">
-                    {{ $data['nama_pasien'] }}
+                    {{ $data->reservasi->pasien->user->name ?? '-' }}
                     <span class="badge">Selesai</span>
                 </div>
                 <div class="info">
-                    📅 {{ $data['tanggal'] }} | ⏰ {{ $data['jam'] }} <br>
-                    Keluhan: {{ $data['keluhan'] }} <br>
-                    Diagnosa: {{ $data['diagnosa'] }} <br>
-                    Tindakan: {{ $data['tindakan'] }}
+                    📅 {{ \Carbon\Carbon::parse($data->Tanggal_Kunjungan)->format('d F Y') }} | ⏰ {{ $data->reservasi->Jam_Kunjungan ?? '-' }} <br>
+                    Keluhan: {{ $data->reservasi->Keluhan ?? '-' }} <br>
+                    Catatan: {{ $data->Catatan_Dokter ?? '-' }}
                 </div>
             </div>
-        @endforeach
+        @empty
+            <p style="text-align: center; color: #666;">Belum ada riwayat pemeriksaan</p>
+        @endforelse
 
     </div>
 </div>

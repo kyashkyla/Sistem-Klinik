@@ -131,6 +131,22 @@
             margin:auto;
             filter: brightness(0) invert(1);
         }
+
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
     </style>
 </head>
 
@@ -143,55 +159,97 @@
             Klinik Sejahtera
         </div>
 
-        <div class="profile-icon">
-            <svg width="26" height="26" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"></circle>
-                <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"></path>
-            </svg>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="profile-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4"></circle>
+                    <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"></path>
+                </svg>
+            </div>
+            <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
         </div>
     </div>
 
  <div class="form-container">
     <h2>Hasil Kunjungan Pasien</h2>
 
-    <form action="{{ route('dokter.kunjungan.store') }}" method="POST">
-        @csrf
+    @if($reservasi->isEmpty())
+        <p style="text-align: center; color: #666;">Tidak ada reservasi yang menunggu untuk dikunjungi</p>
+    @else
+        <form action="{{ route('dokter.kunjungan.store') }}" method="POST">
+            @csrf
 
-        <!-- ID Hasil (visual saja, tidak diproses) -->
-        <label>ID Hasil</label>
-        <input type="text" placeholder="Masukkan ID Hasil" required>
+            <!-- Pilih Reservasi -->
+            <label>Pilih Pasien</label>
+            <select name="ID_Reservasi" id="reservasiSelect" required onchange="fillFormData()">
+                <option value="">-- Pilih Pasien --</option>
+                @foreach($reservasi as $r)
+                    <option value="{{ $r->ID_Reservasi }}" 
+                            data-nama="{{ $r->pasien->user->name ?? '-' }}"
+                            data-tanggal="{{ $r->Tanggal_Kunjungan }}"
+                            data-jam="{{ $r->Jam_Kunjungan ?? '-' }}"
+                            data-keluhan="{{ $r->Keluhan ?? '-' }}">
+                        {{ $r->pasien->user->name ?? '-' }} - {{ $r->Tanggal_Kunjungan }}
+                    </option>
+                @endforeach
+            </select>
 
-        <!-- ID Reservasi -->
-        <label>ID Reservasi</label>
-        <input type="text" name="ID_Reservasi" placeholder="Masukkan ID Reservasi" required>
+            <!-- Nama Pasien (Auto-filled) -->
+            <label>Nama Pasien</label>
+            <input type="text" id="namaPasien" placeholder="Nama pasien" readonly style="background-color: #f5f5f5;">
 
-        <!-- Tanggal Kunjungan -->
-        <label>Tanggal Kunjungan</label>
-        <input type="date" name="Tanggal_Kunjungan" required>
+            <!-- Tanggal Kunjungan (Auto-filled) -->
+            <label>Tanggal Kunjungan</label>
+            <input type="date" id="tanggalKunjungan" name="Tanggal_Kunjungan" readonly style="background-color: #f5f5f5;">
 
-        <!-- Catatan Dokter -->
-        <label>Catatan Dokter</label>
-        <textarea name="Catatan_Dokter"
-            placeholder="Isi catatan"
-            required></textarea>
+            <!-- Jam Kunjungan (Auto-filled) -->
+            <label>Jam Kunjungan</label>
+            <input type="text" id="jamKunjungan" name="Jam_Kunjungan" placeholder="Jam kunjungan" readonly style="background-color: #f5f5f5;">
 
-        <!-- Tombol -->
-        <div style="display:flex; gap:15px; margin-top:10px;">
-            <button type="submit" style="flex:1;">Simpan</button>
+            <!-- Keluhan (Auto-filled) -->
+            <label>Keluhan</label>
+            <textarea id="keluhanText" placeholder="Keluhan pasien" readonly style="background-color: #f5f5f5;"></textarea>
 
-            <button type="button"
-                onclick="history.back()"
-                style="
-                    flex:1;
-                    background:white;
-                    color:#0097a7;
-                    border:2px solid #0097a7;
-                ">
-                Batal
-            </button>
-        </div>
-    </form>
-</div>
+            <!-- Catatan Dokter (Manual Input) -->
+            <label>Catatan Dokter</label>
+            <textarea name="Catatan_Dokter" placeholder="Isi catatan pemeriksaan Anda" required></textarea>
+
+            <!-- Tombol -->
+            <div style="display:flex; gap:15px; margin-top:10px;">
+                <button type="submit" style="flex:1;">Simpan</button>
+
+                <button type="button"
+                    onclick="history.back()"
+                    style="
+                        flex:1;
+                        background:white;
+                        color:#0097a7;
+                        border:2px solid #0097a7;
+                    ">
+                    Batal
+                </button>
+            </div>
+        </form>
+
+        <script>
+            function fillFormData() {
+                const select = document.getElementById('reservasiSelect');
+                const option = select.options[select.selectedIndex];
+                
+                if (option.value) {
+                    document.getElementById('namaPasien').value = option.getAttribute('data-nama');
+                    document.getElementById('tanggalKunjungan').value = option.getAttribute('data-tanggal');
+                    document.getElementById('jamKunjungan').value = option.getAttribute('data-jam');
+                    document.getElementById('keluhanText').value = option.getAttribute('data-keluhan');
+                } else {
+                    document.getElementById('namaPasien').value = '';
+                    document.getElementById('tanggalKunjungan').value = '';
+                    document.getElementById('jamKunjungan').value = '';
+                    document.getElementById('keluhanText').value = '';
+                }
+            }
+        </script>
+    @endif
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">

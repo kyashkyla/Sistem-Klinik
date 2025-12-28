@@ -105,6 +105,24 @@
             cursor: pointer;
         }
 
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
+
         /* BOTTOM NAV (ASLI) */
         .bottom-nav {
             position: fixed;
@@ -138,6 +156,7 @@
             <div class="logo-circle">+</div>
             Klinik Sejahtera
         </div>
+        <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
     </div>
 
     <!-- CONTENT -->
@@ -146,33 +165,40 @@
 
             <h2>Daftar Online</h2>
 
-            <form>
+            <form action="{{ route('pasien.jadwal') }}" method="POST">
+                @csrf
 
                 <label>Nama Pasien</label>
-                <input type="text" placeholder="Nama lengkap">
+                <input type="text" value="{{ Auth::user()->name }}" disabled>
 
                 <label>Keluhan</label>
-                <textarea placeholder="Tuliskan keluhan singkat"></textarea>
+                <textarea name="keluhan" placeholder="Tuliskan keluhan singkat" required>{{ old('keluhan') }}</textarea>
+                @error('keluhan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Pilih Dokter</label>
-                <select>
-                    <option>-- Pilih Dokter --</option>
-                    <option>Dr. Andi (Umum)</option>
-                    <option>Dr. Sinta (Gigi)</option>
-                    <option>Dr. Budi (Anak)</option>
+                <select name="id_dokter" required>
+                    <option value="">-- Pilih Dokter --</option>
+                    @foreach ($dokter as $doc)
+                        <option value="{{ $doc->id }}" {{ old('id_dokter') == $doc->id ? 'selected' : '' }}>
+                            {{ $doc->name }} ({{ $doc->spesialis }})
+                        </option>
+                    @endforeach
                 </select>
+                @error('id_dokter')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Tanggal Kunjungan</label>
-                <input type="date">
+                <input type="date" name="tanggal_kunjungan" value="{{ old('tanggal_kunjungan') }}" required>
+                @error('tanggal_kunjungan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Jam Kunjungan</label>
-                <select>
-                    <option>-- Pilih Jam --</option>
-                    <option>08.00 - 09.00</option>
-                    <option>09.00 - 10.00</option>
-                    <option>10.00 - 11.00</option>
-                    <option>13.00 - 14.00</option>
+                <select name="jam_kunjungan" required>
+                    <option value="">-- Pilih Jam --</option>
+                    <option value="08.00 - 09.00" {{ old('jam_kunjungan') == '08.00 - 09.00' ? 'selected' : '' }}>08.00 - 09.00</option>
+                    <option value="09.00 - 10.00" {{ old('jam_kunjungan') == '09.00 - 10.00' ? 'selected' : '' }}>09.00 - 10.00</option>
+                    <option value="10.00 - 11.00" {{ old('jam_kunjungan') == '10.00 - 11.00' ? 'selected' : '' }}>10.00 - 11.00</option>
+                    <option value="13.00 - 14.00" {{ old('jam_kunjungan') == '13.00 - 14.00' ? 'selected' : '' }}>13.00 - 14.00</option>
                 </select>
+                @error('jam_kunjungan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <button type="submit">
                     Daftar Sekarang

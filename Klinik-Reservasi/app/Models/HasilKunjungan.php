@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class HasilKunjungan extends Model
 {
-    protected $table = 'kunjungan';
+    protected $table = 'hasil_kunjungan';
 
-    protected $primaryKey = 'ID_Kunjungan';
+    protected $primaryKey = 'ID_Hasil';
 
     protected $fillable = [
         'ID_Reservasi',

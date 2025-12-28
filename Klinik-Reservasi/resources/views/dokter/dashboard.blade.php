@@ -99,6 +99,22 @@
             color: white;
             font-weight: 600;
         }
+
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
     </style>
 </head>
 
@@ -111,11 +127,9 @@
             Klinik Sejahtera
         </div>
 
-        <div class="profile-icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"/>
-            </svg>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="color: white; font-size: 14px;">{{ Auth::user()->name }}</span>
+            <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
         </div>
     </div>
 

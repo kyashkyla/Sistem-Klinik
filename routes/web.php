@@ -8,14 +8,20 @@ use App\Http\Controllers\VerifikasiReservasiController;
 use App\Http\Controllers\HasilKunjunganController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\DataPasienController;
+use App\Http\Controllers\ReservasiController;
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECT
+|--------------------------------------------------------------------------
+*/
+Route::get('/', fn () => redirect()->route('login'));
 
 /*
 |--------------------------------------------------------------------------
 | AUTH
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn () => redirect()->route('login'));
-
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
@@ -29,8 +35,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 | DOKTER
 |--------------------------------------------------------------------------
 */
-Route::prefix('dokter')
-    ->middleware(['auth', 'doctor'])
+Route::middleware(['auth', 'doctor'])
+    ->prefix('dokter')
     ->name('dokter.')
     ->group(function () {
 
@@ -48,23 +54,22 @@ Route::prefix('dokter')
 | STAFF KLINIK
 |--------------------------------------------------------------------------
 */
-Route::prefix('staff_klinik')
-    ->middleware(['auth', 'staff'])
+Route::middleware(['auth', 'staff'])
+    ->prefix('staff_klinik')
     ->name('staff.')
     ->group(function () {
 
-        // DASHBOARD
         Route::get('/dashboard', [StaffKlinikDashboardController::class, 'index'])
             ->name('dashboard');
 
-        // ================= VERIFIKASI RESERVASI =================
+        // VERIFIKASI RESERVASI
         Route::get('/verifikasi-reservasi', [VerifikasiReservasiController::class, 'index'])
             ->name('verifikasi');
 
         Route::post('/verifikasi-reservasi/{id}', [VerifikasiReservasiController::class, 'update'])
             ->name('verifikasi.update');
 
-        // ================= KELOLA JADWAL DOKTER =================
+        // KELOLA JADWAL DOKTER
         Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
         Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
@@ -72,7 +77,7 @@ Route::prefix('staff_klinik')
         Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
         Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-        // ================= DATA PASIEN (AKTIF) =================
+        // DATA PASIEN
         Route::get('/data-pasien', [DataPasienController::class, 'index'])
             ->name('data-pasien');
     });
@@ -82,20 +87,28 @@ Route::prefix('staff_klinik')
 | PASIEN
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'pasien'])->group(function () {
+Route::middleware(['auth', 'pasien'])
+    ->prefix('pasien')
+    ->name('pasien.')
+    ->group(function () {
 
-    Route::get('/pasien/dashboard', fn () => view('pasien.dashboard'))->name('pasien.dashboard');
-    Route::get('/pasien/profil', fn () => view('pasien.profil'))->name('profil');
-    Route::get('/pasien/jadwal', fn () => view('pasien.jadwal'))->name('pasien.jadwal');
-    Route::get('/pasien/dokter', fn () => view('pasien.dokter'))->name('pasien.dokter');
-    Route::get('/pasien/darurat', fn () => view('pasien.darurat'))->name('darurat');
-    Route::get('/pasien/informasi', fn () => view('pasien.informasi'))->name('data.umum');
-    Route::get('/pasien/home', fn () => view('pasien.dashboard'))->name('home');
-    Route::get('/pasien/riwayat', fn () => view('pasien.riwayat'))->name('riwayat.pasien');
-    Route::get('/pasien/diskon', fn () => view('pasien.diskon'))->name('diskon');
-    Route::get('/pasien/berita', fn () => view('pasien.berita'))->name('berita');
-    Route::get('/pasien/akun', fn () => view('pasien.profil'))->name('profil.pasien');
-});
+        Route::get('/dashboard', fn () => view('pasien.dashboard'))->name('dashboard');
+        Route::get('/profil', fn () => view('pasien.profil'))->name('profil');
+        Route::get('/jadwal', fn () => view('pasien.jadwal'))->name('jadwal');
+        Route::get('/dokter', fn () => view('pasien.dokter'))->name('dokter');
+        Route::get('/darurat', fn () => view('pasien.darurat'))->name('darurat');
+        Route::get('/informasi', fn () => view('pasien.informasi'))->name('informasi');
+        Route::get('/riwayat', fn () => view('pasien.riwayat'))->name('riwayat');
+        Route::get('/diskon', fn () => view('pasien.diskon'))->name('diskon');
+        Route::get('/berita', fn () => view('pasien.berita'))->name('berita');
+
+        // ================= DAFTAR ONLINE PASIEN =================
+        Route::get('/daftar-online', [ReservasiController::class, 'create'])
+            ->name('reservasi.create');
+
+        Route::post('/daftar-online', [ReservasiController::class, 'store'])
+            ->name('reservasi.store');
+    });
 
 /*
 |--------------------------------------------------------------------------

@@ -87,6 +87,22 @@
             display: block;
             margin: auto
         }
+
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
     </style>
 </head>
 
@@ -96,21 +112,25 @@
         <div class="logo-box">
             <div class="logo-circle">+</div>Klinik Sejahtera
         </div>
-        <div>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z" />
-            </svg>
-        </div>
+        <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
     </div>
 
     <div class="wrap">
         <div class="card">
             <h2>Riwayat Kunjungan</h2>
 
-            <div class="item"><b>12 Desember 2025</b><br>Konsultasi Dokter Umum</div>
-            <div class="item"><b>28 November 2025</b><br>Pemeriksaan Gigi</div>
-            <div class="item"><b>10 November 2025</b><br>Kontrol Kesehatan</div>
+            @forelse ($riwayat as $data)
+                <div class="item">
+                    <b>{{ \Carbon\Carbon::parse($data->Tanggal_Kunjungan)->format('d F Y') }}</b><br>
+                    Dokter: {{ $data->dokter->name ?? '-' }}<br>
+                    Keluhan: {{ $data->Keluhan ?? '-' }}<br>
+                    @if($data->hasilKunjungan->count() > 0)
+                        Catatan: {{ $data->hasilKunjungan->first()->Catatan_Dokter ?? '-' }}
+                    @endif
+                </div>
+            @empty
+                <p style="text-align: center; color: #666;">Belum ada riwayat kunjungan</p>
+            @endforelse
 
         </div>
     </div>

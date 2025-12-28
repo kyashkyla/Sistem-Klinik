@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reservasi;
+use App\Models\HasilKunjungan;
 
 class DashboardDokterController extends Controller
 {
@@ -20,6 +21,7 @@ class DashboardDokterController extends Controller
     public function reservasi()
     {
         $reservasi = Reservasi::with(['pasien', 'jadwal'])
+            ->where('ID_Dokter', auth()->id())
             ->where('Status', 'Disetujui')
             ->orderBy('Tanggal_Reservasi', 'asc')
             ->get();
@@ -29,39 +31,27 @@ class DashboardDokterController extends Controller
 
     public function kunjungan()
     {
-        return view('dokter.kunjungan');
+        $reservasi = Reservasi::with(['pasien.user', 'dokter'])
+            ->where('ID_Dokter', auth()->id())
+            ->where('Status', 'Disetujui')
+            ->orderBy('Tanggal_Kunjungan', 'asc')
+            ->get();
+
+        return view('dokter.kunjungan', compact('reservasi'));
     }
 
-    // =========================
-    // RIWAYAT (DUMMY / TANPA DB)
-    // =========================
     public function riwayat()
     {
-        $riwayat = [
-            [
-                'nama_pasien' => 'Andi Pratama',
-                'tanggal'     => '12 Desember 2025',
-                'jam'         => '09:30',
-                'keluhan'     => 'Demam dan batuk',
-                'diagnosa'    => 'ISPA',
-                'tindakan'    => 'Obat & istirahat'
-            ],
-            [
-                'nama_pasien' => 'Siti Aminah',
-                'tanggal'     => '10 Desember 2025',
-                'jam'         => '13:00',
-                'keluhan'     => 'Nyeri gigi',
-                'diagnosa'    => 'Karies gigi',
-                'tindakan'    => 'Penambalan'
-            ],
-        ];
+        $riwayat = HasilKunjungan::with(['reservasi.pasien.user'])
+            ->whereHas('reservasi', function ($query) {
+                $query->where('ID_Dokter', auth()->id());
+            })
+            ->orderBy('Tanggal_Kunjungan', 'desc')
+            ->get();
 
         return view('dokter.riwayat', compact('riwayat'));
     }
 
-    // =========================
-    // NOTIFIKASI (DUMMY)
-    // =========================
     public function notifikasi()
     {
         $notifikasi = [

@@ -22,8 +22,16 @@ class HasilKunjunganController extends Controller
 
     public function store(Request $request)
     {
-        HasilKunjungan::create($request->all());
-        return redirect()->route('hasil_kunjungan.index');
+        // Jika Tanggal_Kunjungan kosong, ambil dari reservasi
+        $data = $request->all();
+        
+        if (empty($data['Tanggal_Kunjungan'])) {
+            $reservasi = Reservasi::findOrFail($data['ID_Reservasi']);
+            $data['Tanggal_Kunjungan'] = $reservasi->Tanggal_Kunjungan;
+        }
+        
+        HasilKunjungan::create($data);
+        return redirect()->route('dokter.kunjungan')->with('success', 'Hasil kunjungan berhasil disimpan!');
     }
 
     public function show($id)

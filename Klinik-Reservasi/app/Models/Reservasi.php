@@ -12,7 +12,11 @@ class Reservasi extends Model
     protected $fillable = [
         'ID_Pasien',
         'ID_Jadwal',
+        'ID_Dokter',
         'Tanggal_Reservasi',
+        'Tanggal_Kunjungan',
+        'Jam_Kunjungan',
+        'Keluhan',
         'Status',
         'Keterangan'
     ];
@@ -25,5 +29,15 @@ class Reservasi extends Model
     public function jadwal()
     {
         return $this->belongsTo(Jadwal::class, 'ID_Jadwal');
+    }
+
+    public function dokter()
+    {
+        return $this->belongsTo(User::class, 'ID_Dokter');
+    }
+
+    public function hasilKunjungan()
+    {
+        return $this->hasMany(HasilKunjungan::class, 'ID_Reservasi', 'ID_Reservasi');
     }
 }

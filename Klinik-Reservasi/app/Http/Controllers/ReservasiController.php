@@ -1,34 +1,75 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Reservasi;
+use Illuminate\Http\Request;
 
-class Reservasi extends Model
+class ReservasiController extends Controller
 {
-    use HasFactory;
-
-    protected $table = 'reservasi';
-    protected $primaryKey = 'ID_Reservasi';
-
-    protected $fillable = [
-        'ID_Pasien',
-        'ID_Jadwal',
-        'Tanggal_Reservasi',
-        'Status',
-        'Keterangan',
-    ];
-
-    // Relasi ke Pasien
-    public function pasien()
+    public function index()
     {
-        return $this->belongsTo(Pasien::class, 'ID_Pasien');
+        $data = Reservasi::with(['pasien', 'jadwal'])
+            ->orderBy('ID_Reservasi', 'desc')
+            ->get();
+
+        return view('reservasi.index', compact('data'));
     }
 
-    // Relasi ke Jadwal
-    public function jadwal()
+    public function create()
     {
-        return $this->belongsTo(Jadwal::class, 'ID_Jadwal');
+        return view('reservasi.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'ID_Pasien' => 'required|exists:pasien,ID_Pasien',
+            'ID_Jadwal' => 'required|exists:jadwal,ID_Jadwal',
+            'Tanggal_Reservasi' => 'required|date',
+            'Status' => 'required|string',
+        ]);
+
+        Reservasi::create($request->all());
+
+        return redirect()->route('admin.reservasi.index')
+            ->with('success', 'Reservasi berhasil ditambahkan');
+    }
+
+    public function show($id)
+    {
+        $data = Reservasi::with(['pasien', 'jadwal'])->findOrFail($id);
+        return view('reservasi.show', compact('data'));
+    }
+
+    public function edit($id)
+    {
+        $data = Reservasi::findOrFail($id);
+        return view('reservasi.edit', compact('data'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'ID_Pasien' => 'required|exists:pasien,ID_Pasien',
+            'ID_Jadwal' => 'required|exists:jadwal,ID_Jadwal',
+            'Tanggal_Reservasi' => 'required|date',
+            'Status' => 'required|string',
+        ]);
+
+        $reservasi = Reservasi::findOrFail($id);
+        $reservasi->update($request->all());
+
+        return redirect()->route('admin.reservasi.index')
+            ->with('success', 'Reservasi berhasil diupdate');
+    }
+
+    public function destroy($id)
+    {
+        $reservasi = Reservasi::findOrFail($id);
+        $reservasi->delete();
+
+        return redirect()->route('admin.reservasi.index')
+            ->with('success', 'Reservasi berhasil dihapus');
     }
 }
