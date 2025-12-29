@@ -86,10 +86,10 @@
         }
 
         .menu-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: #0097a7;
-    }
+        width: 50px; 
+        height: 50px;
+        color: #117a8b;
+}
 
         .bottom-nav {
             position: fixed;
@@ -150,50 +150,61 @@
 <!-- MENU -->
 <div class="menu-container">
 
-    <!-- Verifikasi Reservasi -->
+    <!-- Verifikasi Reservasi (Kalender + ceklis) -->
     <div class="menu-box" onclick="location.href='{{ route('staff_klinik.verifikasi') }}'">
         <div class="menu-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M3 3h18v18H3z" fill="none"/>
-                <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h6v2H7z"/>
+            <svg viewBox="0 0 24 24" fill="#0097a7">
+                <!-- kalender -->
+                <rect x="3" y="4" width="18" height="17" rx="2"/>
+                <rect x="3" y="9" width="18" height="2" fill="white"/>
+                <rect x="7" y="2" width="2" height="4"/>
+                <rect x="15" y="2" width="2" height="4"/>
+                <!-- ceklis -->
+                <path d="M9 14l2 2 4-4" fill="none" stroke="white" stroke-width="2"/>
             </svg>
         </div>
         <div class="menu-title">Verifikasi Reservasi</div>
     </div>
 
-    <!-- Jadwal Dokter -->
-   <div class="menu-box" onclick="location.href='{{ route('staff_klinik.jadwaldokter') }}'">
-        <div class="menu-icon">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" fill="none"/>
-                <path d="M12 6v6l4 2"/>
-            </svg>
-        </div>
-        <div class="menu-title">Kelola Jadwal Dokter</div>
-    </div>
+    <!-- Kelola Jadwal Dokter (Stetoskop) -->
+ <div class="menu-box" onclick="location.href='{{ route('staff_klinik.jadwaldokter') }}'">
+    <div class="menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0097a7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            
+            <path d="M5 3h2" /> <path d="M17 3h2" /> <path d="M6 3v5" />  <path d="M18 3v5" /> <path d="M6 8a6 6 0 0 0 12 0" />
+            
+            <path d="M12 14v3" /> <path d="M12 17c0 3 -2.5 4 -5 4" />
 
-    <!-- Data Pasien -->
-   <div class="menu-box" onclick="location.href='{{ route('staff_klinik.Datapasien') }}'">
+            <circle cx="7" cy="21" r="3" />
+            <circle cx="7" cy="21" r="1" /> </svg>
+    </div>
+    <div class="menu-title">Kelola Jadwal Dokter</div>
+</div>
+
+    <!-- Data Pasien (Icon Orang) -->
+    <div class="menu-box" onclick="location.href='{{ route('staff_klinik.Datapasien') }}'">
         <div class="menu-icon">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"/>
+            <svg viewBox="0 0 24 24" fill="#0097a7">
+                <circle cx="12" cy="7" r="4"/>
                 <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
             </svg>
         </div>
         <div class="menu-title">Data Pasien</div>
     </div>
 
-    <!-- Hasil Kunjungan -->
-<div class="menu-box" onclick="location.href='{{ route('staff_klinik.kunjungan') }}'">
-    <div class="menu-icon">
-        <svg viewBox="0 0 24 24">
-            <rect x="5" y="3" width="14" height="18" rx="2" ry="2" fill="none"/>
-            <path d="M9 7h6M9 11h6M9 15h4"/>
-            <path d="M12 2v4"/>
-        </svg>
+    <!-- Data Hasil Kunjungan (Laporan) -->
+    <div class="menu-box" onclick="location.href='{{ route('staff_klinik.kunjungan') }}'">
+        <div class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="#0097a7">
+                <path d="M6 2h9l5 5v15a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/>
+                <path d="M15 2v6h6" fill="white"/>
+                <rect x="9" y="11" width="6" height="2" fill="white"/>
+                <rect x="9" y="15" width="6" height="2" fill="white"/>
+                <rect x="9" y="19" width="4" height="2" fill="white"/>
+            </svg>
+        </div>
+        <div class="menu-title">Data Hasil Kunjungan</div>
     </div>
-    <div class="menu-title">Data Hasil Kunjungan</div>
-</div>
 
 </div>
 
