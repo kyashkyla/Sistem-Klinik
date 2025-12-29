@@ -33,7 +33,7 @@ class Reservasi extends Model
 
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'ID_Dokter');
+        return $this->belongsTo(Dokter::class, 'ID_Dokter');
     }
 
     public function hasilKunjungan()

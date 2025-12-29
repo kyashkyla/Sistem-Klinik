@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Notifikasi - Pasien</title>
+    <title>Notifikasi - Klinik Sejahtera</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -83,22 +83,13 @@
             padding: 20px;
             margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-left: 5px solid #ffa000;
+            border-left: 5px solid #ff6b6b;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .notification-card:hover {
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
             transform: translateY(-2px);
-        }
-
-        .notification-card.approved {
-            border-left-color: #4caf50;
-        }
-
-        .notification-card.pending {
-            border-left-color: #ff6b6b;
         }
 
         .notification-header {
@@ -120,21 +111,13 @@
         .notification-icon {
             width: 24px;
             height: 24px;
-            background: #ffa000;
+            background: #ff6b6b;
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
-        }
-
-        .notification-card.approved .notification-icon {
-            background: #4caf50;
-        }
-
-        .notification-card.pending .notification-icon {
-            background: #ff6b6b;
         }
 
         .notification-time {
@@ -165,23 +148,39 @@
             flex: 1;
         }
 
-        .notification-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
             font-weight: 600;
-            margin-top: 8px;
+            font-size: 13px;
+            transition: all 0.3s ease;
         }
 
-        .badge-pending {
-            background: #ff6b6b;
+        .btn-verify {
+            background: #0097a7;
             color: white;
         }
 
-        .badge-approved {
-            background: #4caf50;
-            color: white;
+        .btn-verify:hover {
+            background: #006064;
+        }
+
+        .btn-detail {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-detail:hover {
+            background: #d0d0d0;
         }
 
         .empty-state {
@@ -222,19 +221,44 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 999;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
         }
 
         .bottom-nav div {
-            color: white;
             text-align: center;
             font-size: 14px;
             cursor: pointer;
+            color: white;
             font-weight: 600;
+            position: relative;
         }
 
-        .bottom-nav svg {
-            display: block;
-            margin: auto;
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-baru {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -252,21 +276,17 @@
 <!-- CONTENT -->
 <div class="container">
     <div class="page-title">
-        <i class="bi bi-bell"></i> Notifikasi Reservasi
+        <i class="bi bi-bell"></i> Notifikasi
     </div>
 
     @forelse ($reservasi as $r)
-        <div class="notification-card {{ $r->Status == 'Disetujui' ? 'approved' : 'pending' }}" onclick="location.href='{{ route('pasien.riwayat') }}'">
+        <div class="notification-card">
             <div class="notification-header">
                 <div class="notification-title">
                     <div class="notification-icon">
-                        @if ($r->Status == 'Disetujui')
-                            <i class="bi bi-check-circle"></i>
-                        @else
-                            <i class="bi bi-hourglass-split"></i>
-                        @endif
+                        <i class="bi bi-exclamation"></i>
                     </div>
-                    {{ $r->Status == 'Disetujui' ? 'Reservasi Disetujui' : 'Reservasi Menunggu' }}
+                    Reservasi Baru
                 </div>
                 <div class="notification-time">
                     {{ $r->created_at->diffForHumans() }}
@@ -274,6 +294,14 @@
             </div>
 
             <div class="notification-detail">
+                <div class="notification-detail-item">
+                    <label>Pasien:</label>
+                    <value>{{ $r->pasien->user->name ?? $r->pasien->Nama }}</value>
+                </div>
+                <div class="notification-detail-item">
+                    <label>Email:</label>
+                    <value>{{ $r->pasien->user->email ?? $r->pasien->Email }}</value>
+                </div>
                 <div class="notification-detail-item">
                     <label>Dokter:</label>
                     <value>{{ $r->dokter->Nama ?? '-' }}</value>
@@ -283,17 +311,19 @@
                     <value>{{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') }}</value>
                 </div>
                 <div class="notification-detail-item">
-                    <label>Jam:</label>
-                    <value>{{ $r->Jam_Kunjungan ?? '-' }}</value>
-                </div>
-                <div class="notification-detail-item">
                     <label>Keluhan:</label>
-                    <value>{{ substr($r->Keluhan, 0, 40) }}{{ strlen($r->Keluhan) > 40 ? '...' : '' }}</value>
+                    <value>{{ substr($r->Keluhan, 0, 50) }}{{ strlen($r->Keluhan) > 50 ? '...' : '' }}</value>
                 </div>
+                <span class="badge-baru">BARU</span>
+            </div>
 
-                <span class="notification-badge {{ $r->Status == 'Disetujui' ? 'badge-approved' : 'badge-pending' }}">
-                    {{ $r->Status == 'Disetujui' ? '✓ DISETUJUI' : '⏳ MENUNGGU' }}
-                </span>
+            <div class="notification-actions">
+                <button class="btn btn-verify" onclick="location.href='{{ route('staff_klinik.verifikasi') }}'">
+                    <i class="bi bi-check-circle"></i> Verifikasi Sekarang
+                </button>
+                <button class="btn btn-detail" onclick="alert('Detail: {{ $r->pasien->user->name ?? $r->pasien->Nama }} - {{ $r->Keluhan }}')">
+                    <i class="bi bi-info-circle"></i> Detail
+                </button>
             </div>
         </div>
     @empty
@@ -301,12 +331,12 @@
             <div class="empty-icon">
                 <i class="bi bi-inbox"></i>
             </div>
-            <div class="empty-text">Belum ada notifikasi</div>
+            <div class="empty-text">Tidak ada notifikasi</div>
             <div class="empty-text" style="font-size: 13px; color: #bbb; margin-top: 10px;">
-                Buat reservasi untuk melihat notifikasi di sini
+                Semua reservasi sudah diverifikasi
             </div>
-            <button class="empty-button" onclick="location.href='{{ route('pasien.jadwal') }}'">
-                Buat Reservasi Baru
+            <button class="empty-button" onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+                Kembali ke Menu
             </button>
         </div>
     @endforelse
@@ -315,47 +345,41 @@
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
 
-    <div onclick="location.href='{{ route('pasien.dashboard') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M3 12l9-9 9 9v9H3z" />
+    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+            <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
-        Menu
+        <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.riwayat') }}'">
-        <svg width="26" height="26" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="1 4 1 10 7 10" />
-            <path d="M3.5 15a9 9 0 1 0 .5-9" />
-            <polyline points="12 7 12 12 15 15" />
+    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
+        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-9"/>
+            <polyline points="12 7 12 12 15 15"/>
         </svg>
-        Riwayat
+        <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.diskon') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M3 12l9-9 9 9-9 9z" />
-            <circle cx="9" cy="9" r="2" fill="#0097a7" />
-            <circle cx="15" cy="15" r="2" fill="#0097a7" />
-            <line x1="8" y1="16" x2="16" y2="8" stroke="white" stroke-width="2" />
+    <div onclick="location.href='{{ route('staff_klinik.notifikasi') }}'">
+        <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        Diskon
+        <div>
+            Notifikasi
+            @if ($countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.berita') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z" />
-            <circle cx="12" cy="21" r="2" />
+    <div onclick="location.href='{{ route('staff_klinik.profil') }}'">
+        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="10" r="3"/>
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M6 18c0-3 3-5 6-5s6 2 6 5"/>
         </svg>
-        Notifikasi
-    </div>
-
-    <div onclick="location.href='{{ route('pasien.profil') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="10" r="3" />
-            <circle cx="12" cy="12" r="10" />
-            <path d="M6 18c0-3 3-5 6-5s6 2 6 5" />
-        </svg>
-        Saya
+        <div>Saya</div>
     </div>
 
 </div>

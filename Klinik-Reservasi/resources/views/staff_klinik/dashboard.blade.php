@@ -100,6 +100,7 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 999;
         }
 
         .bottom-nav div {
@@ -108,6 +109,23 @@
             cursor: pointer;
             color: white;
             font-weight: 600;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
         }
         .logout-btn {
             background: #ff6b6b;
@@ -167,7 +185,7 @@
     </div>
 
     <!-- Kelola Jadwal Dokter (Stetoskop) -->
- <div class="menu-box" onclick="location.href='{{ route('staff_klinik.jadwaldokter') }}'">
+ <div class="menu-box" onclick="location.href='{{ route('staff_klinik.jadwaldokter.index') }}'">
     <div class="menu-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="#0097a7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             
@@ -228,14 +246,19 @@
         <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.notifikasi') }}'">
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        <div>Notifikasi</div>
+        <div>
+            Notifikasi
+            @if ($countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.profil') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

@@ -1,196 +1,374 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
-    <title>Notifikasi Dokter</title>
+    <title>Notifikasi - Klinik Sejahtera</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #eef7f7;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #eef7f7;
+            padding-bottom: 100px;
         }
 
         .header {
-            background: #0097a7;
-            color: #fff;
+            background-color: #0097a7;
+            color: white;
             padding: 15px 25px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .logo-box {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 22px;
-            font-weight: bold;
         }
 
         .logo-circle {
-            background: #fff;
+            background: white;
             color: #0097a7;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            font-size: 30px;
-            font-weight: 900;
+            width: 40px;
+            height: 40px;
             display: flex;
-            justify-content: center;
             align-items: center;
-        }
-
-        .wrap {
-            display: flex;
             justify-content: center;
-            padding: 40px 15px 120px;
-        }
-
-        .card {
-            background: #fff;
-            max-width: 640px;
-            width: 100%;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #0097a7;
-        }
-
-        .item {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-            display: flex;
-            gap: 12px;
-        }
-
-        .item:last-child {
-            border-bottom: none;
-        }
-
-        .icon {
             font-size: 24px;
+            font-weight: 900;
         }
 
-        .title {
+        .header-title {
+            font-size: 20px;
             font-weight: bold;
-            color: #333;
         }
 
-        .desc {
+        .logout-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            color: #006064;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .notification-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid #ff6b6b;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-card:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .notification-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #006064;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 14px;
-            color: #555;
-            margin-top: 4px;
         }
 
-        .time {
+        .notification-time {
             font-size: 12px;
             color: #999;
-            margin-top: 4px;
+        }
+
+        .notification-detail {
+            font-size: 13px;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .notification-detail-item {
+            display: flex;
+            margin: 6px 0;
+        }
+
+        .notification-detail-item label {
+            font-weight: 600;
+            color: #333;
+            min-width: 100px;
+        }
+
+        .notification-detail-item value {
+            color: #666;
+            flex: 1;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-periksa {
+            background: #0097a7;
+            color: white;
+        }
+
+        .btn-periksa:hover {
+            background: #006064;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .empty-text {
+            color: #999;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .empty-button {
+            background: #0097a7;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
         }
 
         /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
             background: #0097a7;
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 999;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
         }
 
         .bottom-nav div {
-            color: #fff;
             text-align: center;
             font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
+            color: white;
+            font-weight: 600;
+            position: relative;
         }
 
-        .bottom-nav svg {
-            display: block;
-            margin: auto;
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-menunggu {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 5px;
         }
     </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
 <div class="header">
-    <div class="logo-box">
+    <div class="header-left">
         <div class="logo-circle">+</div>
-        Klinik Sejahtera
+        <div class="header-title">Klinik Sejahtera</div>
     </div>
-    <div>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-            <circle cx="12" cy="8" r="4" />
-            <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z" />
-        </svg>
-    </div>
+    <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
 </div>
 
 <!-- CONTENT -->
-<div class="wrap">
-    <div class="card">
-        <h2>Notifikasi Dokter</h2>
+<div class="container">
+    <div class="page-title">
+        <i class="bi bi-bell"></i> Notifikasi
+    </div>
 
-        @foreach ($notifikasi as $n)
-            <div class="item">
-                <div class="icon">{{ $n['icon'] }}</div>
-                <div>
-                    <div class="title">{{ $n['judul'] }}</div>
-                    <div class="desc">{{ $n['pesan'] }}</div>
-                    <div class="time">{{ $n['waktu'] }}</div>
+    @forelse ($reservasi as $r)
+        <div class="notification-card">
+            <div class="notification-header">
+                <div class="notification-title">
+                    <div class="notification-icon">
+                        <i class="bi bi-exclamation"></i>
+                    </div>
+                    Pasien Menunggu Pemeriksaan
+                </div>
+                <div class="notification-time">
+                    @if($r->Tanggal_Kunjungan)
+                        {{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') }}
+                    @else
+                        -
+                    @endif
                 </div>
             </div>
-        @endforeach
 
-    </div>
+            <div class="notification-detail">
+                <div class="notification-detail-item">
+                    <label>Pasien:</label>
+                    <value>{{ $r->pasien->user->name ?? $r->pasien->Nama }}</value>
+                </div>
+                <div class="notification-detail-item">
+                    <label>Email:</label>
+                    <value>{{ $r->pasien->user->email ?? $r->pasien->Email }}</value>
+                </div>
+                <div class="notification-detail-item">
+                    <label>Tanggal:</label>
+                    <value>{{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') }}</value>
+                </div>
+                <div class="notification-detail-item">
+                    <label>Keluhan:</label>
+                    <value>{{ substr($r->Keluhan, 0, 50) }}{{ strlen($r->Keluhan) > 50 ? '...' : '' }}</value>
+                </div>
+                <span class="badge-menunggu">MENUNGGU</span>
+            </div>
+
+            <div class="notification-actions">
+                <button class="btn btn-periksa" onclick="location.href='{{ route('dokter.periksa', $r->ID_Reservasi) }}'">
+                    <i class="bi bi-stethoscope"></i> Periksa Sekarang
+                </button>
+            </div>
+        </div>
+    @empty
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <div class="empty-text">Tidak ada notifikasi</div>
+            <div class="empty-text" style="font-size: 13px; color: #bbb; margin-top: 10px;">
+                Semua reservasi sudah diperiksa
+            </div>
+            <button class="empty-button" onclick="location.href='{{ route('dokter.dashboard') }}'">
+                Kembali ke Menu
+            </button>
+        </div>
+    @endforelse
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
 
     <div onclick="location.href='{{ route('dokter.dashboard') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M3 12l9-9 9 9v9H3z" />
+        <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
+            <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
-        Menu
+        <div>Menu</div>
     </div>
 
     <div onclick="location.href='{{ route('dokter.riwayat') }}'">
-        <svg width="26" height="26" fill="none" stroke="white" stroke-width="2"
-            viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="1 4 1 10 7 10" />
-            <path d="M3.5 15a9 9 0 1 0 .5-9" />
-            <polyline points="12 7 12 12 15 15" />
+        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-9"/>
+            <polyline points="12 7 12 12 15 15"/>
         </svg>
-        Riwayat
+        <div>Riwayat</div>
     </div>
 
     <div onclick="location.href='{{ route('dokter.notifikasi') }}'">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
-            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z" />
-            <circle cx="12" cy="21" r="2" />
+        <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        Notifikasi
+        <div>
+            Notifikasi
+            @if ($countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
-    <div onclick="location.href='{{ route('dokter.dashboard') }}'">
-        <svg width="26" height="26" fill="none"
-            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            viewBox="0 0 24 24">
-            <circle cx="12" cy="10" r="3" />
-            <circle cx="12" cy="12" r="10" />
-            <path d="M6 18c0-3 3-5 6-5s6 2 6 5" />
+    <div onclick="location.href='{{ route('dokter.profil') }}'">
+        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="10" r="3"/>
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M6 18c0-3 3-5 6-5s6 2 6 5"/>
         </svg>
-        Saya
+        <div>Saya</div>
     </div>
 
 </div>

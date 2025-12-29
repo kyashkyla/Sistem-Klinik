@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Profil - Pasien</title>
+    <title>Profil - Dokter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -199,8 +199,8 @@
         <div class="profile-avatar">
             <i class="bi bi-person"></i>
         </div>
-        <div class="profile-name">{{ auth()->user()->name }}</div>
-        <div class="profile-role">Pasien</div>
+        <div class="profile-name">{{ $dokter->Nama ?? auth()->user()->name }}</div>
+        <div class="profile-role">Dokter</div>
     </div>
 
     <!-- INFO PRIBADI -->
@@ -213,7 +213,7 @@
             </div>
             <div class="profile-item-content">
                 <div class="profile-item-label">Nama Lengkap</div>
-                <div class="profile-item-value">{{ $pasien->Nama ?? auth()->user()->name }}</div>
+                <div class="profile-item-value">{{ $dokter->Nama ?? '-' }}</div>
             </div>
         </div>
 
@@ -233,32 +233,32 @@
             </div>
             <div class="profile-item-content">
                 <div class="profile-item-label">No. Telepon</div>
-                <div class="profile-item-value">{{ $pasien->No_Telepon ?? '-' }}</div>
+                <div class="profile-item-value">{{ $dokter->No_Telepon ?? '-' }}</div>
             </div>
         </div>
 
         <div class="profile-item">
             <div class="profile-item-icon">
-                <i class="bi bi-house-fill"></i>
+                <i class="bi bi-hospital"></i>
             </div>
             <div class="profile-item-content">
-                <div class="profile-item-label">Alamat</div>
-                <div class="profile-item-value">{{ $pasien->Alamat ?? '-' }}</div>
+                <div class="profile-item-label">Spesialis</div>
+                <div class="profile-item-value">{{ $dokter->Spesialis ?? '-' }}</div>
             </div>
         </div>
     </div>
 
     <!-- STATISTIK -->
     <div class="profile-card">
-        <div class="profile-section-title">Informasi Kunjungan</div>
+        <div class="profile-section-title">Informasi Praktik</div>
 
         <div class="profile-item">
             <div class="profile-item-icon">
                 <i class="bi bi-calendar2-check"></i>
             </div>
             <div class="profile-item-content">
-                <div class="profile-item-label">Total Kunjungan</div>
-                <div class="profile-item-value">{{ $totalKunjungan }} kali</div>
+                <div class="profile-item-label">Total Pasien Diperiksa</div>
+                <div class="profile-item-value">{{ $totalPasien }} orang</div>
             </div>
         </div>
 
@@ -267,7 +267,7 @@
                 <i class="bi bi-clock-history"></i>
             </div>
             <div class="profile-item-content">
-                <div class="profile-item-label">Member Sejak</div>
+                <div class="profile-item-label">Terdaftar Sejak</div>
                 <div class="profile-item-value">{{ auth()->user()->created_at->format('d F Y') }}</div>
             </div>
         </div>
@@ -277,22 +277,14 @@
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
 
-    <div onclick="location.href='{{ route('pasien.dashboard') }}'">
+    <div onclick="location.href='{{ route('dokter.dashboard') }}'">
         <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
             <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.dokter') }}'">
-        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="8.5" cy="7" r="4"/>
-        </svg>
-        <div>Dokter</div>
-    </div>
-
-    <div onclick="location.href='{{ route('pasien.riwayat') }}'">
+    <div onclick="location.href='{{ route('dokter.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 .49-9"/>
@@ -301,7 +293,17 @@
         <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.profil') }}'">
+    <div onclick="location.href='{{ route('dokter.reservasi') }}'">
+        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <div>Jadwal</div>
+    </div>
+
+    <div onclick="location.href='{{ route('dokter.profil') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>
             <circle cx="12" cy="12" r="10"/>

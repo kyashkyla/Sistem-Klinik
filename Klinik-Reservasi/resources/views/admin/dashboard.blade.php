@@ -211,7 +211,7 @@
 
         <div class="section-title">Manajemen Sistem</div>
         <div class="grid">
-            <a href="{{ route('staff_klinik.dashboard') }}" class="card">
+            <a href="{{ route('staff_klinik.verifikasi') }}" class="card">
                 <div class="card-icon">📋</div>
                 <h3>Verifikasi Reservasi</h3>
                 <p>Setujui atau tolak reservasi pasien</p>
@@ -223,7 +223,7 @@
                 <p>Lihat daftar dan kelola data pasien</p>
             </a>
 
-            <a href="{{ route('staff_klinik.jadwaldokter') }}" class="card">
+            <a href="{{ route('admin.jadwal.index') }}" class="card">
                 <div class="card-icon">📅</div>
                 <h3>Jadwal Dokter</h3>
                 <p>Kelola jadwal praktik dokter</p>

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Profil - Pasien</title>
+    <title>Profil - Staff Klinik</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -158,6 +158,41 @@
             word-break: break-word;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #0097a7;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #006064;
+        }
+
+        .btn-logout {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-logout:hover {
+            background: #ff5252;
+        }
+
         /* BOTTOM NAV */
         .bottom-nav {
             position: fixed;
@@ -180,6 +215,22 @@
             font-weight: 600;
             position: relative;
         }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -200,7 +251,7 @@
             <i class="bi bi-person"></i>
         </div>
         <div class="profile-name">{{ auth()->user()->name }}</div>
-        <div class="profile-role">Pasien</div>
+        <div class="profile-role">Staff Klinik</div>
     </div>
 
     <!-- INFO PRIBADI -->
@@ -213,7 +264,7 @@
             </div>
             <div class="profile-item-content">
                 <div class="profile-item-label">Nama Lengkap</div>
-                <div class="profile-item-value">{{ $pasien->Nama ?? auth()->user()->name }}</div>
+                <div class="profile-item-value">{{ auth()->user()->name }}</div>
             </div>
         </div>
 
@@ -229,38 +280,18 @@
 
         <div class="profile-item">
             <div class="profile-item-icon">
-                <i class="bi bi-telephone-fill"></i>
+                <i class="bi bi-shield-check"></i>
             </div>
             <div class="profile-item-content">
-                <div class="profile-item-label">No. Telepon</div>
-                <div class="profile-item-value">{{ $pasien->No_Telepon ?? '-' }}</div>
-            </div>
-        </div>
-
-        <div class="profile-item">
-            <div class="profile-item-icon">
-                <i class="bi bi-house-fill"></i>
-            </div>
-            <div class="profile-item-content">
-                <div class="profile-item-label">Alamat</div>
-                <div class="profile-item-value">{{ $pasien->Alamat ?? '-' }}</div>
+                <div class="profile-item-label">Role</div>
+                <div class="profile-item-value">{{ ucfirst(auth()->user()->role) }}</div>
             </div>
         </div>
     </div>
 
     <!-- STATISTIK -->
     <div class="profile-card">
-        <div class="profile-section-title">Informasi Kunjungan</div>
-
-        <div class="profile-item">
-            <div class="profile-item-icon">
-                <i class="bi bi-calendar2-check"></i>
-            </div>
-            <div class="profile-item-content">
-                <div class="profile-item-label">Total Kunjungan</div>
-                <div class="profile-item-value">{{ $totalKunjungan }} kali</div>
-            </div>
-        </div>
+        <div class="profile-section-title">Statistik Kerjaan</div>
 
         <div class="profile-item">
             <div class="profile-item-icon">
@@ -277,22 +308,14 @@
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
 
-    <div onclick="location.href='{{ route('pasien.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
         <svg width="28" height="28" fill="white" viewBox="0 0 24 24">
             <path d="M3 12l9-9 9 9v9H3z"/>
         </svg>
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.dokter') }}'">
-        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="8.5" cy="7" r="4"/>
-        </svg>
-        <div>Dokter</div>
-    </div>
-
-    <div onclick="location.href='{{ route('pasien.riwayat') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 .49-9"/>
@@ -301,7 +324,14 @@
         <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('pasien.profil') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.notifikasi') }}'">
+        <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
+        </svg>
+        <div>Notifikasi</div>
+    </div>
+
+    <div onclick="location.href='{{ route('staff_klinik.profil') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>
             <circle cx="12" cy="12" r="10"/>

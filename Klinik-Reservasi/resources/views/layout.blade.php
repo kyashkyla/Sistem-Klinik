@@ -8,8 +8,16 @@
 <body class="bg-light">
 
 <nav class="navbar navbar-dark bg-primary mb-4">
-    <div class="container">
+    <div class="container-fluid">
         <a class="navbar-brand" href="#">Klinik Reservasi</a>
+        <div>
+            @if(auth()->check())
+                <span class="text-white me-3">{{ auth()->user()->name }}</span>
+                <a href="{{ route('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm">Login</a>
+            @endif
+        </div>
     </div>
 </nav>
 

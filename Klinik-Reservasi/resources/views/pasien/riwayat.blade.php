@@ -3,12 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Riwayat Kunjungan</title>
+    <title>Riwayat Reservasi</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #eef7f7
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef7f7;
+            padding-bottom: 120px;
         }
 
         .header {
@@ -17,7 +23,7 @@
             padding: 15px 25px;
             display: flex;
             justify-content: space-between;
-            align-items: center
+            align-items: center;
         }
 
         .logo-box {
@@ -25,7 +31,7 @@
             align-items: center;
             gap: 10px;
             font-size: 22px;
-            font-weight: bold
+            font-weight: bold;
         }
 
         .logo-circle {
@@ -38,54 +44,7 @@
             font-weight: 900;
             display: flex;
             justify-content: center;
-            align-items: center
-        }
-
-        .wrap {
-            display: flex;
-            justify-content: center;
-            padding: 40px 15px 120px
-        }
-
-        .card {
-            background: #fff;
-            max-width: 640px;
-            width: 100%;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .1)
-        }
-
-        h2 {
-            text-align: center;
-            color: #0097a7
-        }
-
-        .item {
-            border-bottom: 1px solid #eee;
-            padding: 15px 0
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #0097a7;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0
-        }
-
-        .bottom-nav div {
-            color: #fff;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 600
-        }
-
-        .bottom-nav svg {
-            display: block;
-            margin: auto
+            align-items: center;
         }
 
         .logout-btn {
@@ -103,6 +62,135 @@
         .logout-btn:hover {
             background: #ff5252;
         }
+
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            color: #006064;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .reservation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid #0097a7;
+        }
+
+        .reservation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .reservation-date {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0097a7;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .reservation-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #333;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .reservation-complaint {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .doctor-notes {
+            background: #e8f4f8;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #0097a7;
+            margin: 10px 0;
+            border-left: 3px solid #0097a7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #0097a7;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 999;
+        }
+
+        .bottom-nav div {
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .bottom-nav svg {
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 
@@ -110,31 +198,65 @@
 
     <div class="header">
         <div class="logo-box">
-            <div class="logo-circle">+</div>Klinik Sejahtera
+            <div class="logo-circle">+</div>
+            Klinik Sejahtera
         </div>
         <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
     </div>
 
-    <div class="wrap">
-        <div class="card">
-            <h2>Riwayat Kunjungan</h2>
+    <div class="container">
+        <div class="page-title">Riwayat Reservasi</div>
 
-            @forelse ($riwayat as $data)
-                <div class="item">
-                    <b>{{ \Carbon\Carbon::parse($data->Tanggal_Kunjungan)->format('d F Y') }}</b><br>
-                    Dokter: {{ $data->dokter->name ?? '-' }}<br>
-                    Keluhan: {{ $data->Keluhan ?? '-' }}<br>
-                    @if($data->hasilKunjungan->count() > 0)
-                        Catatan: {{ $data->hasilKunjungan->first()->Catatan_Dokter ?? '-' }}
-                    @endif
+        @forelse ($riwayat as $data)
+            <div class="reservation-card">
+                <div class="reservation-header">
+                    <div class="reservation-date">
+                        {{ \Carbon\Carbon::parse($data->created_at)->format('d F Y') }}
+                    </div>
+                    <span class="status-badge 
+                        @if($data->Status == 'menunggu') status-pending 
+                        @elseif($data->Status == 'Disetujui') status-approved 
+                        @else status-rejected @endif">
+                        {{ ucfirst($data->Status) }}
+                    </span>
                 </div>
-            @empty
-                <p style="text-align: center; color: #666;">Belum ada riwayat kunjungan</p>
-            @endforelse
 
-        </div>
+                <div class="reservation-info">
+                    <div style="margin-bottom: 8px;">
+                        <span class="info-label">Dokter:</span>
+                        {{ $data->dokter->Nama ?? '-' }}
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span class="info-label">Jadwal:</span>
+                        {{ \Carbon\Carbon::parse($data->Tanggal_Kunjungan)->format('d-m-Y') }}
+                    </div>
+                </div>
+
+                @if($data->Keluhan)
+                    <div class="reservation-complaint">
+                        <strong>Keluhan:</strong><br>
+                        {{ $data->Keluhan }}
+                    </div>
+                @endif
+
+                @if($data->hasilKunjungan && $data->hasilKunjungan->count() > 0)
+                    <div class="doctor-notes">
+                        <strong>Catatan Dokter:</strong><br>
+                        {{ $data->hasilKunjungan->first()->Catatan_Dokter ?? '-' }}
+                    </div>
+                @endif
+            </div>
+        @empty
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div style="font-size: 16px; color: #999;">Belum ada riwayat reservasi</div>
+                <div style="font-size: 13px; color: #bbb; margin-top: 10px;">
+                    Buat reservasi baru untuk mulai berkonsultasi
+                </div>
+            </div>
+        @endforelse
+
     </div>
-
 
     <div class="bottom-nav">
 
@@ -170,7 +292,7 @@
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z" />
                 <circle cx="12" cy="21" r="2" />
             </svg>
-           Notifikasi
+            Notifikasi
         </div>
 
         <div onclick="location.href='{{ route('pasien.profil') }}'">
@@ -184,7 +306,6 @@
         </div>
 
     </div>
-
 
 </body>
 

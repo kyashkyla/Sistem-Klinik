@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>Jadwal Dokter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #eef7f7;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
         }
         .header {
             background-color: #0097a7;
@@ -18,6 +19,7 @@
             padding: 15px 25px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
         .logo-box {
             display: flex;
@@ -40,6 +42,7 @@
         }
         .container {
             padding: 25px;
+            max-width: 1000px;
         }
         h2 {
             color: #006064;
@@ -47,9 +50,10 @@
         }
         .card {
             background: white;
-            border-radius: 20px;
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -59,11 +63,47 @@
             background: #0097a7;
             color: white;
             padding: 12px;
+            text-align: left;
         }
         td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
-            text-align: center;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .btn {
+            padding: 6px 12px;
+            margin: 2px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-add {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+        }
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+        .btn-delete:hover {
+            background: #c82333;
+        }
+        .btn-add:hover {
+            background: #218838;
         }
         .bottom-nav {
             position: fixed;
@@ -75,6 +115,7 @@
             justify-content: space-around;
             padding: 10px 0;
             z-index: 999;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
         .bottom-nav div {
             text-align: center;
@@ -87,6 +128,11 @@
             display: block;
             margin: 0 auto 4px;
         }
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
     </style>
 </head>
 
@@ -97,39 +143,63 @@
         <div class="logo-circle">+</div>
         Klinik Sejahtera
     </div>
+    <a href="{{ route('logout') }}" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 600;">Logout</a>
 </div>
 
 <div class="container">
-    <h2>Jadwal Dokter</h2>
+    <h2>📅 Jadwal Dokter</h2>
+
+    <a href="{{ route('staff_klinik.jadwaldokter.create') }}" class="btn btn-add">+ Tambah Jadwal</a>
 
     <div class="card">
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Dokter</th>
-                    <th>Spesialis</th>
-                    <th>Hari</th>
-                    <th>Jam</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Dr. Andi</td>
-                    <td>Umum</td>
-                    <td>Senin</td>
-                    <td>08.00 - 12.00</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Dr. Sinta</td>
-                    <td>Anak</td>
-                    <td>Selasa</td>
-                    <td>10.00 - 14.00</td>
-                </tr>
-            </tbody>
-        </table>
+        @if($data->count() > 0)
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Dokter</th>
+                        <th>Spesialis</th>
+                        <th>Hari</th>
+                        <th>Jam Kerja</th>
+                        <th>Status Slot</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data as $key => $jadwal)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $jadwal->dokter->Nama ?? 'N/A' }}</td>
+                            <td>{{ $jadwal->dokter->Spesialis ?? 'N/A' }}</td>
+                            <td>
+                                @php
+                                    $daysOfWeek = ['', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                                @endphp
+                                {{ $daysOfWeek[$jadwal->Hari] ?? 'N/A' }}
+                            </td>
+                            <td>{{ $jadwal->Jam_Mulai }} - {{ $jadwal->Jam_Selesai }}</td>
+                            <td>
+                                <span class="badge" style="background: {{ $jadwal->Status_Slot === 'Tersedia' ? '#28a745' : '#dc3545' }}">
+                                    {{ $jadwal->Status_Slot }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ route('staff_klinik.jadwaldokter.edit', $jadwal->ID_Jadwal) }}" class="btn btn-edit">Edit</a>
+                                <form action="{{ route('staff_klinik.jadwaldokter.destroy', $jadwal->ID_Jadwal) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="no-data">
+                <p>📭 Tidak ada jadwal dokter</p>
+            </div>
+        @endif
     </div>
 </div>
 
@@ -143,21 +213,21 @@
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.verifikasi') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
-            <polyline points="1 4 1 10 7 10"/>
-            <path d="M3.51 15a9 9 0 1 0 .49-9"/>
-            <polyline points="12 7 12 12 15 15"/>
+            <rect x="3" y="4" width="18" height="17" rx="2"/>
+            <rect x="3" y="9" width="18" height="2" fill="white"/>
         </svg>
-        <div>Riwayat</div>
+        <div>Verifikasi</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.jadwaldokter.index') }}'">
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
-            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
+            <rect x="3" y="4" width="18" height="17" rx="2"/>
+            <rect x="3" y="9" width="18" height="2" fill="white"/>
         </svg>
-        <div>Notifikasi</div>
+        <div>Jadwal</div>
     </div>
 
    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">

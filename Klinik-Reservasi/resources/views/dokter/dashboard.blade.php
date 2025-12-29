@@ -90,6 +90,7 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 999;
         }
 
         .bottom-nav div {
@@ -98,6 +99,23 @@
             cursor: pointer;
             color: white;
             font-weight: 600;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .logout-btn {
@@ -180,10 +198,15 @@
             <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9zM13.73 21a2 2 0 11-3.46 0"/>
             </svg>
-            <div>Notifikasi</div>
+            <div>
+                Notifikasi
+                @if ($countPending > 0)
+                    <span class="notification-badge">{{ $countPending }}</span>
+                @endif
+            </div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.profil') }}'">
             <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
                  viewBox="0 0 24 24">
                 <circle cx="12" cy="10" r="3"/>

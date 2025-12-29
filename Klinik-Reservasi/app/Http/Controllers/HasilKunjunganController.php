@@ -22,6 +22,13 @@ class HasilKunjunganController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi
+        $request->validate([
+            'ID_Reservasi' => 'required|exists:reservasi,ID_Reservasi',
+            'Catatan_Dokter' => 'required|string',
+            'Tanggal_Kunjungan' => 'required|date'
+        ]);
+        
         // Jika Tanggal_Kunjungan kosong, ambil dari reservasi
         $data = $request->all();
         
@@ -31,7 +38,7 @@ class HasilKunjunganController extends Controller
         }
         
         HasilKunjungan::create($data);
-        return redirect()->route('dokter.kunjungan')->with('success', 'Hasil kunjungan berhasil disimpan!');
+        return redirect()->route('dokter.kunjungan')->with('success', 'Hasil pemeriksaan berhasil disimpan!');
     }
 
     public function show($id)

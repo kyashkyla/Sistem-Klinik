@@ -48,6 +48,7 @@ Route::prefix('admin')
             ->name('dashboard');
 
         Route::resource('reservasi', ReservasiController::class);
+        Route::resource('jadwal', JadwalController::class);
     });
 
 /*
@@ -69,18 +70,26 @@ Route::prefix('dokter')
         Route::get('/jadwal', [DashboardDokterController::class, 'jadwal'])
             ->name('jadwal');
 
-        // 👉 INI YANG DIPAKAI UNTUK RESERVASI
         Route::get('/reservasi', [DashboardDokterController::class, 'reservasi'])
             ->name('reservasi');
 
+        Route::get('/periksa/{id}', [DashboardDokterController::class, 'periksa'])
+            ->name('periksa');
+
         Route::get('/kunjungan', [DashboardDokterController::class, 'kunjungan'])
             ->name('kunjungan');
+
+        Route::get('/kunjungan/{id}', [DashboardDokterController::class, 'kunjunganDetail'])
+            ->name('kunjungan.detail');
 
         Route::post('/kunjungan/store', [HasilKunjunganController::class, 'store'])
             ->name('kunjungan.store');
 
         Route::get('/notifikasi', [DashboardDokterController::class, 'notifikasi'])
             ->name('notifikasi');
+
+        Route::get('/profil', [DashboardDokterController::class, 'profil'])
+            ->name('profil');
     });
 
 /*
@@ -105,21 +114,22 @@ Route::prefix('staff_klinik')
         Route::post('/reject/{id}', [StaffKlinikDashboardController::class, 'reject'])
             ->name('reject');
 
-        Route::get('/Datapasien', function () {
-            return view('staff_klinik.Datapasien');
-        })->name('Datapasien');
+        Route::get('/Datapasien', [StaffKlinikDashboardController::class, 'dataPasien'])
+            ->name('Datapasien');
 
-        Route::get('/jadwaldokter', function () {
-            return view('staff_klinik.jadwaldokter');
-        })->name('jadwaldokter');
+        Route::resource('jadwaldokter', JadwalController::class);
 
-        Route::get('/kunjungan', function () {
-            return view('staff_klinik.kunjungan');
-        })->name('kunjungan');
+        Route::get('/kunjungan', [StaffKlinikDashboardController::class, 'kunjunganList'])
+            ->name('kunjungan');
 
-        Route::get('/riwayat', function () {
-            return view('staff_klinik.riwayat');
-        })->name('riwayat');
+        Route::get('/notifikasi', [StaffKlinikDashboardController::class, 'notifikasi'])
+            ->name('notifikasi');
+
+        Route::get('/profil', [StaffKlinikDashboardController::class, 'profil'])
+            ->name('profil');
+
+        Route::get('/riwayat', [StaffKlinikDashboardController::class, 'riwayat'])
+            ->name('riwayat');
     });
 
 /*
@@ -132,14 +142,18 @@ Route::middleware(['auth', 'pasien'])
     ->name('pasien.')
     ->group(function () {
 
-        Route::get('/dashboard', fn() => view('pasien.dashboard'))
+        Route::get('/dashboard', [PasienDashboardController::class, 'dashboard'])
             ->name('dashboard');
 
         // ✅ DAFTAR ONLINE (RESERVASI) - ROUTE UNTUK FORM
         Route::match(['get', 'post'], '/jadwal', [ReservasiPasienController::class, 'handleJadwal'])
             ->name('jadwal');
 
-        Route::get('/dokter', fn() => view('pasien.dokter'))
+        Route::get('/dokter', function() {
+            $dokter = \App\Models\Dokter::all();
+            $jadwal = \App\Models\Jadwal::with('dokter')->where('Status_Slot', 'Tersedia')->get();
+            return view('pasien.dokter', compact('dokter', 'jadwal'));
+        })
             ->name('dokter');
 
         Route::get('/darurat', fn() => view('pasien.darurat'))
@@ -151,14 +165,14 @@ Route::middleware(['auth', 'pasien'])
         Route::get('/riwayat', [PasienDashboardController::class, 'riwayat'])
             ->name('riwayat');
 
+        Route::get('/profil', [PasienDashboardController::class, 'profil'])
+            ->name('profil');
+
         Route::get('/diskon', fn() => view('pasien.diskon'))
             ->name('diskon');
 
-        Route::get('/berita', fn() => view('pasien.berita'))
+        Route::get('/berita', [PasienDashboardController::class, 'notifikasi'])
             ->name('berita');
-
-        Route::get('/profil', fn() => view('pasien.profil'))
-            ->name('profil');
 
         // Deprecated - gunakan /jadwal saja
         Route::get('/daftar-online', [ReservasiPasienController::class, 'create'])
@@ -166,6 +180,10 @@ Route::middleware(['auth', 'pasien'])
 
         Route::post('/daftar-online', [ReservasiPasienController::class, 'store'])
             ->name('reservasi.store');
+        
+        // API untuk ambil jam jadwal dokter
+        Route::get('/api/jadwal-dokter/{id_dokter}/{tanggal}', [ReservasiPasienController::class, 'getJadwalDokter'])
+            ->name('api.jadwal-dokter');
     });
 
 /*
@@ -173,5 +191,4 @@ Route::middleware(['auth', 'pasien'])
 | RESOURCE
 |--------------------------------------------------------------------------
 */
-Route::resource('jadwal', JadwalController::class);
 Route::resource('hasil_kunjungan', HasilKunjunganController::class);

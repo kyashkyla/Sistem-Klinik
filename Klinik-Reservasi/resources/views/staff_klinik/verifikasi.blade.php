@@ -116,6 +116,9 @@
         <div class="logo-circle">+</div>
         Klinik Sejahtera
     </div>
+    <div style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+        <a href="{{ route('logout') }}" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 600;">Logout</a>
+    </div>
 </div>
 
 <!-- CONTENT -->
@@ -137,7 +140,7 @@
                 <tr>
                     <td>{{ $r->pasien->user->name ?? '-' }}</td>
                     <td>{{ $r->Tanggal_Kunjungan ?? '-' }}</td>
-                    <td>{{ $r->dokter->name ?? '-' }}</td>
+                    <td>{{ $r->dokter->Nama ?? '-' }}</td>
                     <td>
                         <form action="{{ route('staff_klinik.approve', $r->ID_Reservasi) }}" method="POST" style="display:inline">
                             @csrf

@@ -88,6 +88,7 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 999;
         }
 
         .bottom-nav div {
@@ -96,11 +97,28 @@
             font-size: 14px;
             cursor: pointer;
             font-weight: 600;
+            position: relative;
         }
 
         .bottom-nav svg {
             display: block;
             margin: auto;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .logout-btn {
@@ -236,7 +254,12 @@
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
             <circle cx="12" cy="21" r="2"/>
         </svg>
-        Notifikasi
+        <div>
+            Notifikasi
+            @if ($countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
     <!-- SAYA -->

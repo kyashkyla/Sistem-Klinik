@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Reservasi Pasien - Klinik Sejahtera</title>
+    <title>Detail Kunjungan - Klinik Sejahtera</title>
 
     <style>
         body {
@@ -57,49 +57,59 @@
             margin-bottom: 25px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 12px;
-            overflow: hidden;
+        .detail-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #0097a7;
         }
 
-        table th {
+        .detail-section h3 {
+            color: #0097a7;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #006064;
+            min-width: 150px;
+            flex: 0 0 150px;
+        }
+
+        .detail-value {
+            color: #555;
+            flex: 1;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 5px;
+            word-break: break-word;
+        }
+
+        .btn-back {
             background: #0097a7;
             color: white;
-            padding: 14px 12px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-        }
-
-        table td {
-            padding: 14px 12px;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 13px;
-        }
-
-        table tbody tr:hover {
-            background-color: #f5f9fa;
-            transition: background-color 0.2s ease;
-        }
-
-        table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status {
-            padding: 6px 10px;
-            font-size: 13px;
+            padding: 12px 24px;
+            border: none;
             border-radius: 8px;
-            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
         }
 
-        .pending { background: #fff3cd; color: #856404; }
-        .disetujui { background: #d4edda; color: #155724; }
-        .dibatalkan { background: #f8d7da; color: #721c24; }
+        .btn-back:hover {
+            background: #006064;
+        }
 
         .bottom-nav {
             position: fixed;
@@ -110,27 +120,21 @@
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            z-index: 999;
         }
 
         .bottom-nav div {
-            text-align: center;
-            font-size: 14px;
-            cursor: pointer;
-            color: white;
-            font-weight: 600;
+            text-align:center;
+            font-size:14px;
+            cursor:pointer;
+            color:white;
+            font-weight:600;
         }
 
         .bottom-nav svg {
-            width: 26px;
-            display: block;
-            margin: auto;
+            width:26px;
+            display:block;
+            margin:auto;
             fill: white;
-        }
-
-        .bottom-nav div:hover {
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
         }
     </style>
 </head>
@@ -155,62 +159,72 @@
         </div>
     </div>
 
-    <!-- TABEL RESERVASI -->
+    <!-- CONTENT -->
     <div class="content-container">
-        <h2>Daftar Reservasi Pasien</h2>
+        <a href="{{ route('dokter.kunjungan') }}" class="btn-back">← Kembali</a>
+        
+        <h2>Detail Hasil Pemeriksaan</h2>
 
-        <table>
-    <thead>
-        <tr>
-            <th>ID Reservasi</th>
-            <th>Nama Pasien</th>
-            <th>Jadwal</th>
-            <th>Tanggal</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
+        <!-- INFORMASI PASIEN -->
+        <div class="detail-section">
+            <h3>Informasi Pasien</h3>
+            
+            <div class="detail-row">
+                <div class="detail-label">Nama Pasien</div>
+                <div class="detail-value">{{ $hasil->reservasi->pasien->user->name ?? '-' }}</div>
+            </div>
 
-    <tbody>
-        @forelse ($reservasi as $r)
-        <tr>
-            <td><strong>{{ $r->ID_Reservasi }}</strong></td>
+            <div class="detail-row">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">{{ $hasil->reservasi->pasien->user->email ?? '-' }}</div>
+            </div>
 
-            <td>{{ $r->pasien->Nama ?? '-' }}</td>
+            <div class="detail-row">
+                <div class="detail-label">Nomor Telepon</div>
+                <div class="detail-value">{{ $hasil->reservasi->pasien->No_Telepon ?? '-' }}</div>
+            </div>
 
-            <td>
-                @if($r->jadwal)
-                    <strong>{{ $r->jadwal->Hari ?? '-' }}</strong><br/>
-                    <small>{{ $r->jadwal->Jam_Mulai ?? '' }} - {{ $r->jadwal->Jam_Selesai ?? '' }}</small>
-                @else
-                    <small style="color: #999;">Jadwal belum ditentukan</small>
-                @endif
-            </td>
+            <div class="detail-row">
+                <div class="detail-label">Alamat</div>
+                <div class="detail-value">{{ $hasil->reservasi->pasien->Alamat ?? '-' }}</div>
+            </div>
+        </div>
 
-            <td>{{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') ?? $r->Tanggal_Reservasi }}</td>
+        <!-- INFORMASI KUNJUNGAN -->
+        <div class="detail-section">
+            <h3>Informasi Kunjungan</h3>
+            
+            <div class="detail-row">
+                <div class="detail-label">ID Hasil</div>
+                <div class="detail-value">{{ $hasil->ID_Hasil }}</div>
+            </div>
 
-            <td>
-                <span class="status {{ strtolower($r->Status) }}">
-                    {{ $r->Status }}
-                </span>
-            </td>
+            <div class="detail-row">
+                <div class="detail-label">Tanggal Kunjungan</div>
+                <div class="detail-value">{{ \Carbon\Carbon::parse($hasil->Tanggal_Kunjungan)->format('d-m-Y') }}</div>
+            </div>
 
-            <td>
-                <a href="{{ route('dokter.periksa', $r->ID_Reservasi) }}"
-                   style="background:#0097a7; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:600; display:inline-block;">
-                    Periksa
-                </a>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="6" style="text-align:center; padding:20px; color:#777;">
-                Tidak ada reservasi disetujui.
-            </td>
-        </tr>
-        @endforelse
-    </tbody>
-</table>
+            <div class="detail-row">
+                <div class="detail-label">Dokter</div>
+                <div class="detail-value">{{ $hasil->reservasi->dokter->Nama ?? '-' }}</div>
+            </div>
+        </div>
+
+        <!-- INFORMASI MEDIS -->
+        <div class="detail-section">
+            <h3>Informasi Medis</h3>
+            
+            <div class="detail-row">
+                <div class="detail-label">Keluhan Pasien</div>
+                <div class="detail-value">{{ $hasil->reservasi->Keluhan ?? '-' }}</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Catatan Dokter</div>
+                <div class="detail-value">{{ $hasil->Catatan_Dokter ?? '-' }}</div>
+            </div>
+        </div>
+
     </div>
 
     <!-- BOTTOM NAV -->

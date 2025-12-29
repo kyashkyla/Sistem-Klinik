@@ -142,25 +142,36 @@
         <div class="register-title">Sign Up</div>
 
         <div class="form-box">
+            <!-- ERROR MESSAGES -->
+            @if ($errors->any())
+                <div style="background: #ff6b6b; color: white; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="/register" method="POST">
                 @csrf
 
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="border: @error('name') 2px solid #ff6b6b @enderror;">
                     <i class="bi bi-person-circle"></i>
-                    <input type="text" name="name" placeholder="nama lengkap" required>
+                    <input type="text" name="name" placeholder="nama lengkap" value="{{ old('name') }}" required>
                 </div>
 
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="border: @error('email') 2px solid #ff6b6b @enderror;">
                     <i class="bi bi-envelope"></i>
-                    <input type="email" name="email" placeholder="email" required>
+                    <input type="email" name="email" placeholder="email" value="{{ old('email') }}" required>
                 </div>
 
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="border: @error('password') 2px solid #ff6b6b @enderror;">
                     <i class="bi bi-lock"></i>
                     <input type="password" name="password" placeholder="password" required>
                 </div>
 
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="border: @error('password') 2px solid #ff6b6b @enderror;">
                     <i class="bi bi-lock-fill"></i>
                     <input type="password" name="password_confirmation" placeholder="konfirmasi password" required>
                 </div>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Reservasi;
 use App\Models\Pasien;
 use App\Models\User;
+use App\Models\Dokter;
 
 class ReservasiPasienController extends Controller
 {
@@ -23,8 +24,10 @@ class ReservasiPasienController extends Controller
     // ✅ TAMPILKAN FORM DAFTAR ONLINE
     public function create()
     {
-        // 👨‍⚕️ AMBIL SEMUA DOKTER DARI DATABASE
-        $dokter = User::where('role', 'dokter')->get();
+        // 👨‍⚕️ AMBIL SEMUA DOKTER DARI DATABASE (hanya yang punya jadwal tersedia)
+        $dokter = Dokter::whereHas('jadwal', function($query) {
+            $query->where('Status_Slot', 'Tersedia');
+        })->get();
         
         return view('pasien.jadwal', ['dokter' => $dokter]);
     }
@@ -34,7 +37,7 @@ class ReservasiPasienController extends Controller
     {
         $request->validate([
             'keluhan'           => 'required|string|max:255',
-            'id_dokter'        => 'required|exists:users,id',
+            'id_dokter'        => 'required|exists:dokter,ID_Dokter',
             'tanggal_kunjungan' => 'required|date|after:today',
             'jam_kunjungan'     => 'required|string',
         ], [
@@ -65,5 +68,66 @@ class ReservasiPasienController extends Controller
 
         return redirect()->route('pasien.riwayat')
             ->with('success', 'Reservasi berhasil! Menunggu verifikasi staff klinik.');
+    }
+
+    // ✅ API UNTUK AMBIL JAM JADWAL DOKTER BERDASARKAN HARI DAN TANGGAL
+    public function getJadwalDokter($id_dokter, $tanggal)
+    {
+        try {
+            \Log::info('getJadwalDokter called', ['id_dokter' => $id_dokter, 'tanggal' => $tanggal]);
+            
+            // Parse tanggal untuk mendapatkan hari dalam minggu
+            $date = \Carbon\Carbon::createFromFormat('Y-m-d', $tanggal);
+            
+            // Carbon dayOfWeek: Monday=1, Sunday=0
+            // Kami ingin: Monday=1, Sunday=7
+            $dayOfWeek = $date->dayOfWeek;
+            if ($dayOfWeek == 0) {
+                $dayOfWeek = 7;
+            }
+            
+            \Log::info('Converted date', ['original_date' => $tanggal, 'dayOfWeek' => $dayOfWeek, 'day_name' => $date->format('l')]);
+            
+            // Cari jadwal dokter untuk hari tersebut
+            $jadwal = \App\Models\Jadwal::where('ID_Dokter', $id_dokter)
+                ->where('Hari', $dayOfWeek)
+                ->where('Status_Slot', 'Tersedia')
+                ->first();
+            
+            \Log::info('Jadwal search result', ['found' => $jadwal ? 'yes' : 'no']);
+            
+            if (!$jadwal) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dokter tidak ada jadwal pada hari tersebut',
+                    'data' => []
+                ]);
+            }
+            
+            // Generate waktu slot dengan interval 30 menit
+            $jamMulai = \Carbon\Carbon::createFromTimeString($jadwal->Jam_Mulai);
+            $jamSelesai = \Carbon\Carbon::createFromTimeString($jadwal->Jam_Selesai);
+            
+            $timeSlots = [];
+            while ($jamMulai < $jamSelesai) {
+                $timeSlots[] = $jamMulai->format('H:i');
+                $jamMulai->addMinutes(30);
+            }
+            
+            \Log::info('Time slots generated', ['count' => count($timeSlots), 'slots' => $timeSlots]);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $timeSlots
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('getJadwalDokter error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+                'data' => []
+            ], 500);
+        }
     }
 }

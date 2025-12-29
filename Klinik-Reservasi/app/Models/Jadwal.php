@@ -10,8 +10,9 @@ class Jadwal extends Model
     protected $primaryKey = 'ID_Jadwal';
 
     protected $fillable = [
-        'Tanggal',
-        'Waktu',
+        'Hari',
+        'Jam_Mulai',
+        'Jam_Selesai',
         'Status_Slot',
         'ID_Dokter'
     ];

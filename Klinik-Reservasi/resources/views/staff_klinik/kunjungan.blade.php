@@ -27,6 +27,7 @@
         <div class="logo-circle">+</div>
         Klinik Sejahtera
     </div>
+    <a href="{{ route('logout') }}" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 600; margin-left: auto;">Logout</a>
 </div>
 
 <div class="container">
@@ -38,25 +39,26 @@
                     <th>No</th>
                     <th>Nama Pasien</th>
                     <th>Dokter</th>
-                    <th>Tanggal</th>
-                    <th>Status</th>
+                    <th>Tanggal Kunjungan</th>
+                    <th>Catatan Dokter</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Ahmad Fauzi</td>
-                    <td>Dr. Andi</td>
-                    <td>21-12-2025</td>
-                    <td>Selesai</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Siti Aisyah</td>
-                    <td>Dr. Sinta</td>
-                    <td>22-12-2025</td>
-                    <td>Menunggu</td>
-                </tr>
+                @forelse ($hasilKunjungan as $key => $hasil)
+                    <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $hasil->reservasi->pasien->user->name ?? $hasil->reservasi->pasien->Nama }}</td>
+                        <td>{{ $hasil->reservasi->dokter->Nama ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($hasil->Tanggal_Kunjungan)->format('d-m-Y') }}</td>
+                        <td style="text-align: left;">{{ $hasil->Catatan_Dokter ?? '-' }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #999; padding: 30px;">
+                            Belum ada data kunjungan
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

@@ -176,27 +176,23 @@
                 @error('keluhan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Pilih Dokter</label>
-                <select name="id_dokter" required>
+                <select id="id_dokter" name="id_dokter" required>
                     <option value="">-- Pilih Dokter --</option>
                     @foreach ($dokter as $doc)
-                        <option value="{{ $doc->id }}" {{ old('id_dokter') == $doc->id ? 'selected' : '' }}>
-                            {{ $doc->name }} ({{ $doc->spesialis }})
+                        <option value="{{ $doc->ID_Dokter }}" {{ old('id_dokter') == $doc->ID_Dokter ? 'selected' : '' }}>
+                            {{ $doc->Nama }} ({{ $doc->Spesialis }})
                         </option>
                     @endforeach
                 </select>
                 @error('id_dokter')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Tanggal Kunjungan</label>
-                <input type="date" name="tanggal_kunjungan" value="{{ old('tanggal_kunjungan') }}" required>
+                <input type="date" id="tanggal_kunjungan" name="tanggal_kunjungan" value="{{ old('tanggal_kunjungan') }}" required>
                 @error('tanggal_kunjungan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
                 <label>Jam Kunjungan</label>
-                <select name="jam_kunjungan" required>
-                    <option value="">-- Pilih Jam --</option>
-                    <option value="08.00 - 09.00" {{ old('jam_kunjungan') == '08.00 - 09.00' ? 'selected' : '' }}>08.00 - 09.00</option>
-                    <option value="09.00 - 10.00" {{ old('jam_kunjungan') == '09.00 - 10.00' ? 'selected' : '' }}>09.00 - 10.00</option>
-                    <option value="10.00 - 11.00" {{ old('jam_kunjungan') == '10.00 - 11.00' ? 'selected' : '' }}>10.00 - 11.00</option>
-                    <option value="13.00 - 14.00" {{ old('jam_kunjungan') == '13.00 - 14.00' ? 'selected' : '' }}>13.00 - 14.00</option>
+                <select id="jam_kunjungan" name="jam_kunjungan" required disabled>
+                    <option value="">-- Pilih Tanggal & Dokter Dulu --</option>
                 </select>
                 @error('jam_kunjungan')<span style="color: red; font-size: 12px;">{{ $message }}</span>@enderror
 
@@ -258,6 +254,56 @@
         </div>
 
     </div>
+
+    <script>
+        // Ambil jam jadwal ketika dokter dan tanggal dipilih
+        document.getElementById('id_dokter').addEventListener('change', loadJadwal);
+        document.getElementById('tanggal_kunjungan').addEventListener('change', loadJadwal);
+
+        function loadJadwal() {
+            const idDokter = document.getElementById('id_dokter').value;
+            const tanggal = document.getElementById('tanggal_kunjungan').value;
+            const jamSelect = document.getElementById('jam_kunjungan');
+
+            // Reset dropdown jam
+            jamSelect.innerHTML = '<option value="">-- Pilih Jam --</option>';
+            jamSelect.disabled = true;
+
+            // Jika kedua field sudah diisi, fetch jadwal dari API
+            if (idDokter && tanggal) {
+                const apiUrl = `/pasien/api/jadwal-dokter/${idDokter}/${tanggal}`;
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('API Response:', data);
+                        
+                        if (data.success && data.data && data.data.length > 0) {
+                            jamSelect.disabled = false;
+                            data.data.forEach(waktu => {
+                                const option = document.createElement('option');
+                                option.value = waktu;
+                                option.textContent = waktu;
+                                jamSelect.appendChild(option);
+                            });
+                        } else {
+                            jamSelect.innerHTML = '<option value="">Tidak ada jadwal tersedia untuk tanggal ini</option>';
+                            jamSelect.disabled = true;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        jamSelect.innerHTML = '<option value="">Error mengambil jadwal</option>';
+                        jamSelect.disabled = true;
+                    });
+            }
+        }
+    </script>
 
 </body>
 

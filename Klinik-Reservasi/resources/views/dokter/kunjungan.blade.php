@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Kunjungan Pasien - Klinik Sejahtera</title>
+    <title>Hasil Kunjungan - Klinik Sejahtera</title>
 
     <style>
         body {
@@ -42,12 +42,8 @@
             font-weight: 900;
         }
 
-        .profile-icon svg {
-            fill: white;
-        }
-
-        .form-container {
-            max-width: 550px;
+        .content-container {
+            max-width: 900px;
             background: white;
             margin: 35px auto 120px;
             padding: 25px;
@@ -61,50 +57,36 @@
             margin-bottom: 25px;
         }
 
-        label {
-            font-weight: bold;
-            color: #00838f;
-        }
-
-        input, textarea, select, button {
-            font-family: Arial, sans-serif !important;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            font-family: Arial, sans-serif !important;
-        }
-
-        input, textarea, select {
+        table {
             width: 100%;
-            padding: 11px 18px;
-            border-radius: 10px;
-            margin-top: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #bbb;
-            font-size: 15px;
-            box-sizing: border-box;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        textarea {
-            height: 90px;
-        }
-
-        button {
-            width: 100%;
+        table th {
             background: #0097a7;
-            padding: 14px;
-            border: none;
             color: white;
-            font-size: 17px;
-            border-radius: 10px;
-            cursor: pointer;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 8px;
             font-weight: bold;
         }
 
-        button:hover {
-            background: #007d8a;
-        }
+        .selesai { background: #d4edda; color: #155724; }
 
         .bottom-nav {
             position: fixed;
@@ -118,34 +100,25 @@
         }
 
         .bottom-nav div {
-            text-align:center;
-            font-size:14px;
-            cursor:pointer;
-            color:white;
-            font-weight:600;
-        }
-
-        .bottom-nav img, .bottom-nav svg {
-            width:26px;
-            display:block;
-            margin:auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .logout-btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
             cursor: pointer;
-            text-decoration: none;
-            font-size: 13px;
+            color: white;
             font-weight: 600;
         }
 
-        .logout-btn:hover {
-            background: #ff5252;
+        a.btn-lihat {
+            background:#0097a7;
+            color:white;
+            padding:6px 12px;
+            border-radius:8px;
+            text-decoration:none;
+            font-size:13px;
+            font-weight:bold;
+        }
+
+        a.btn-lihat:hover {
+            background:#006064;
         }
     </style>
 </head>
@@ -166,90 +139,55 @@
                     <path d="M12 14c-4.4 0-8 2-8 4v2h16v-2c0-2-3.6-4-8-4z"></path>
                 </svg>
             </div>
-            <a href="{{ route('logout') }}" class="logout-btn">Logout</a>
+            <a href="{{ route('logout') }}" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 600;">Logout</a>
         </div>
     </div>
 
- <div class="form-container">
-    <h2>Hasil Kunjungan Pasien</h2>
+    <!-- TABEL HASIL KUNJUNGAN -->
+    <div class="content-container">
+        <h2>Hasil Pemeriksaan Pasien</h2>
 
-    @if($reservasi->isEmpty())
-        <p style="text-align: center; color: #666;">Tidak ada reservasi yang menunggu untuk dikunjungi</p>
-    @else
-        <form action="{{ route('dokter.kunjungan.store') }}" method="POST">
-            @csrf
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Hasil</th>
+                    <th>Nama Pasien</th>
+                    <th>Tanggal Kunjungan</th>
+                    <th>Keluhan</th>
+                    <th>Catatan Dokter</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
 
-            <!-- Pilih Reservasi -->
-            <label>Pilih Pasien</label>
-            <select name="ID_Reservasi" id="reservasiSelect" required onchange="fillFormData()">
-                <option value="">-- Pilih Pasien --</option>
-                @foreach($reservasi as $r)
-                    <option value="{{ $r->ID_Reservasi }}" 
-                            data-nama="{{ $r->pasien->user->name ?? '-' }}"
-                            data-tanggal="{{ $r->Tanggal_Kunjungan }}"
-                            data-jam="{{ $r->Jam_Kunjungan ?? '-' }}"
-                            data-keluhan="{{ $r->Keluhan ?? '-' }}">
-                        {{ $r->pasien->user->name ?? '-' }} - {{ $r->Tanggal_Kunjungan }}
-                    </option>
-                @endforeach
-            </select>
+            <tbody>
+                @forelse ($hasilKunjungan as $hasil)
+                <tr>
+                    <td>{{ $hasil->ID_Hasil }}</td>
 
-            <!-- Nama Pasien (Auto-filled) -->
-            <label>Nama Pasien</label>
-            <input type="text" id="namaPasien" placeholder="Nama pasien" readonly style="background-color: #f5f5f5;">
+                    <td>{{ $hasil->reservasi->pasien->user->name ?? '-' }}</td>
 
-            <!-- Tanggal Kunjungan (Auto-filled) -->
-            <label>Tanggal Kunjungan</label>
-            <input type="date" id="tanggalKunjungan" name="Tanggal_Kunjungan" readonly style="background-color: #f5f5f5;">
+                    <td>{{ \Carbon\Carbon::parse($hasil->Tanggal_Kunjungan)->format('d-m-Y') }}</td>
 
-            <!-- Jam Kunjungan (Auto-filled) -->
-            <label>Jam Kunjungan</label>
-            <input type="text" id="jamKunjungan" name="Jam_Kunjungan" placeholder="Jam kunjungan" readonly style="background-color: #f5f5f5;">
+                    <td>{{ substr($hasil->reservasi->Keluhan ?? '-', 0, 25) }}...</td>
 
-            <!-- Keluhan (Auto-filled) -->
-            <label>Keluhan</label>
-            <textarea id="keluhanText" placeholder="Keluhan pasien" readonly style="background-color: #f5f5f5;"></textarea>
+                    <td>{{ substr($hasil->Catatan_Dokter ?? '-', 0, 25) }}...</td>
 
-            <!-- Catatan Dokter (Manual Input) -->
-            <label>Catatan Dokter</label>
-            <textarea name="Catatan_Dokter" placeholder="Isi catatan pemeriksaan Anda" required></textarea>
-
-            <!-- Tombol -->
-            <div style="display:flex; gap:15px; margin-top:10px;">
-                <button type="submit" style="flex:1;">Simpan</button>
-
-                <button type="button"
-                    onclick="history.back()"
-                    style="
-                        flex:1;
-                        background:white;
-                        color:#0097a7;
-                        border:2px solid #0097a7;
-                    ">
-                    Batal
-                </button>
-            </div>
-        </form>
-
-        <script>
-            function fillFormData() {
-                const select = document.getElementById('reservasiSelect');
-                const option = select.options[select.selectedIndex];
-                
-                if (option.value) {
-                    document.getElementById('namaPasien').value = option.getAttribute('data-nama');
-                    document.getElementById('tanggalKunjungan').value = option.getAttribute('data-tanggal');
-                    document.getElementById('jamKunjungan').value = option.getAttribute('data-jam');
-                    document.getElementById('keluhanText').value = option.getAttribute('data-keluhan');
-                } else {
-                    document.getElementById('namaPasien').value = '';
-                    document.getElementById('tanggalKunjungan').value = '';
-                    document.getElementById('jamKunjungan').value = '';
-                    document.getElementById('keluhanText').value = '';
-                }
-            }
-        </script>
-    @endif
+                    <td>
+                        <a href="{{ route('dokter.kunjungan.detail', $hasil->ID_Hasil) }}" class="btn-lihat">
+                            Lihat
+                        </a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:15px; color:#777;">
+                        Belum ada hasil pemeriksaan.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">
@@ -261,7 +199,7 @@
             <div>Menu</div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.riwayat') }}'">
             <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
                  viewBox="0 0 24 24">
                 <polyline points="1 4 1 10 7 10"/>
@@ -271,14 +209,14 @@
             <div>Riwayat</div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.notifikasi') }}'">
             <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9zM13.73 21a2 2 0 11-3.46 0"/>
             </svg>
-            <div>Berita</div>
+            <div>Notifikasi</div>
         </div>
 
-        <div onclick="location.href='{{ route('dokter.dashboard') }}'">
+        <div onclick="location.href='{{ route('dokter.profil') }}'">
             <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
                  viewBox="0 0 24 24">
                 <circle cx="12" cy="10" r="3"/>

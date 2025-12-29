@@ -100,10 +100,26 @@
             cursor: pointer;
             color: white;
             font-weight: 600;
+            position: relative;
         }
         .bottom-nav svg {
             display: block;
             margin: 0 auto 4px;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -116,6 +132,7 @@
         <div class="logo-circle">+</div>
         Klinik Sejahtera
     </div>
+    <a href="{{ route('logout') }}" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 600; margin-left: auto;">Logout</a>
 </div>
 
 <!-- CONTENT -->
@@ -129,34 +146,31 @@
                     <th>No</th>
                     <th>Nama Pasien</th>
                     <th>Email</th>
-                    <th>No. HP</th>
-                    <th>Aksi</th>
+                    <th>Dokter</th>
+                    <th>Tanggal Kunjungan</th>
+                    <th>Jam</th>
+                    <th>Keluhan</th>
                 </tr>
             </thead>
             <tbody>
 
-            {{-- DATA DUMMY (GANTI DENGAN FOREACH DATABASE NANTI) --}}
-            <tr>
-                <td>1</td>
-                <td>Ahmad Fauzi</td>
-                <td>ahmad@gmail.com</td>
-                <td>08123456789</td>
-                <td>
-                    <button class="btn btn-detail">Detail</button>
-                    <button class="btn btn-delete">Hapus</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>2</td>
-                <td>Siti Aisyah</td>
-                <td>siti@gmail.com</td>
-                <td>08234567890</td>
-                <td>
-                    <button class="btn btn-detail">Detail</button>
-                    <button class="btn btn-delete">Hapus</button>
-                </td>
-            </tr>
+            @forelse ($reservasi as $key => $r)
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $r->pasien->user->name ?? $r->pasien->Nama }}</td>
+                    <td>{{ $r->pasien->user->email ?? $r->pasien->Email }}</td>
+                    <td>{{ $r->dokter->Nama ?? '-' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') }}</td>
+                    <td>{{ $r->Jam_Kunjungan ?? '-' }}</td>
+                    <td>{{ substr($r->Keluhan, 0, 30) }}{{ strlen($r->Keluhan) > 30 ? '...' : '' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #999; padding: 30px;">
+                        Belum ada reservasi yang disetujui
+                    </td>
+                </tr>
+            @endforelse
 
             </tbody>
         </table>
@@ -183,14 +197,19 @@
         <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.notifikasi') }}'">
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
             <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        <div>Notifikasi</div>
+        <div>
+            Notifikasi
+            @if ($countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.profil') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

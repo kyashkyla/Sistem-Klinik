@@ -16,7 +16,7 @@ class HasilKunjungan extends Model
         'Catatan_Dokter'
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function reservasi()
     {
