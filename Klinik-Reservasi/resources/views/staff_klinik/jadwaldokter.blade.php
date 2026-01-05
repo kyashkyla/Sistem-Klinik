@@ -213,24 +213,29 @@
         <div>Menu</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.verifikasi') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.riwayat') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
-            <rect x="3" y="4" width="18" height="17" rx="2"/>
-            <rect x="3" y="9" width="18" height="2" fill="white"/>
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-9"/>
+            <polyline points="12 7 12 12 15 15"/>
         </svg>
-        <div>Verifikasi</div>
+        <div>Riwayat</div>
     </div>
 
-    <div onclick="location.href='{{ route('staff_klinik.jadwaldokter.index') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.notifikasi') }}'">
         <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
-            <rect x="3" y="4" width="18" height="17" rx="2"/>
-            <rect x="3" y="9" width="18" height="2" fill="white"/>
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/>
         </svg>
-        <div>Jadwal</div>
+        <div>
+            Notifikasi
+            @if (isset($countPending) && $countPending > 0)
+                <span class="notification-badge">{{ $countPending }}</span>
+            @endif
+        </div>
     </div>
 
-   <div onclick="location.href='{{ route('staff_klinik.dashboard') }}'">
+    <div onclick="location.href='{{ route('staff_klinik.profil') }}'">
         <svg width="28" height="28" fill="none" stroke="white" stroke-width="2"
              viewBox="0 0 24 24">
             <circle cx="12" cy="10" r="3"/>

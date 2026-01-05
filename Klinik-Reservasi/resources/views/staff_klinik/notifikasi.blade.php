@@ -321,7 +321,15 @@
                 <button class="btn btn-verify" onclick="location.href='{{ route('staff_klinik.verifikasi') }}'">
                     <i class="bi bi-check-circle"></i> Verifikasi Sekarang
                 </button>
-                <button class="btn btn-detail" onclick="alert('Detail: {{ $r->pasien->user->name ?? $r->pasien->Nama }} - {{ $r->Keluhan }}')">
+                <button class="btn btn-detail"
+                        data-nama="{{ $r->pasien->user->name ?? $r->pasien->Nama }}"
+                        data-email="{{ $r->pasien->user->email ?? $r->pasien->Email }}"
+                        data-telepon="{{ $r->pasien->No_Telepon ?? '' }}"
+                        data-dokter="{{ $r->dokter->Nama ?? '-' }}"
+                        data-tanggal="{{ \Carbon\Carbon::parse($r->Tanggal_Kunjungan)->format('d-m-Y') }}"
+                        data-keluhan="{{ e($r->Keluhan) }}"
+                        data-alamat="{{ $r->pasien->Alamat ?? '' }}"
+                        onclick="showDetailFromButton(this)">
                     <i class="bi bi-info-circle"></i> Detail
                 </button>
             </div>
@@ -386,3 +394,61 @@
 
 </body>
 </html>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; z-index:2000;">
+    <div style="background:white; width:92%; max-width:520px; border-radius:12px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h3 style="margin:0; color:#006064;">Detail Pasien</h3>
+            <button onclick="closeDetail()" style="background:transparent;border:none;font-size:20px;cursor:pointer;color:#666;">&times;</button>
+        </div>
+        <div id="detailBody" style="font-size:14px; color:#333; line-height:1.6">
+            <!-- populated by JS -->
+        </div>
+        <div style="display:flex; gap:10px; margin-top:14px; justify-content:flex-end;">
+            <button onclick="closeDetail()" style="background:#e0e0e0;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;">Tutup</button>
+            <button id="goToVerifikasi" style="background:#0097a7;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700;">Lihat Verifikasi</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDetail(data) {
+        var body = document.getElementById('detailBody');
+        body.innerHTML = '';
+        var html = '';
+        html += '<div><strong>Nama:</strong> ' + (data.nama || '-') + '</div>';
+        html += '<div><strong>Email:</strong> ' + (data.email || '-') + '</div>';
+        html += '<div><strong>Telepon:</strong> ' + (data.telepon || '-') + '</div>';
+        html += '<div><strong>Dokter:</strong> ' + (data.dokter || '-') + '</div>';
+        html += '<div><strong>Tanggal Kunjungan:</strong> ' + (data.tanggal || '-') + '</div>';
+        html += '<div style="margin-top:8px;"><strong>Keluhan:</strong><div style="margin-top:6px;padding:8px;background:#f7f7f7;border-radius:6px;">' + (data.keluhan || '-') + '</div></div>';
+        if (data.alamat) html += '<div style="margin-top:8px;"><strong>Alamat:</strong> ' + data.alamat + '</div>';
+        body.innerHTML = html;
+
+        var modal = document.getElementById('detailModal');
+        modal.style.display = 'flex';
+
+        var btn = document.getElementById('goToVerifikasi');
+        btn.onclick = function() { window.location.href = "{{ route('staff_klinik.verifikasi') }}"; };
+    }
+
+    function closeDetail() {
+        var modal = document.getElementById('detailModal');
+        modal.style.display = 'none';
+    }
+
+    function showDetailFromButton(btn) {
+        var ds = btn.dataset;
+        var data = {
+            nama: ds.nama || '',
+            email: ds.email || '',
+            telepon: ds.telepon || '',
+            dokter: ds.dokter || '',
+            tanggal: ds.tanggal || '',
+            keluhan: ds.keluhan || '',
+            alamat: ds.alamat || ''
+        };
+        showDetail(data);
+    }
+</script>

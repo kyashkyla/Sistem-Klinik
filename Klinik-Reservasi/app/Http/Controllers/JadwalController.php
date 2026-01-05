@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
 use App\Models\Dokter;
+use App\Models\Reservasi;
 use Illuminate\Http\Request;
 
 class JadwalController extends Controller
@@ -11,14 +12,16 @@ class JadwalController extends Controller
     public function index()
     {
         $data = Jadwal::with('dokter')->get();
-        
+
         // Cek apakah diakses dari staff_klinik, admin, atau jalur public
         if (request()->path() === 'staff_klinik/jadwaldokter') {
-            return view('staff_klinik.jadwaldokter', compact('data'));
+            // ambil jumlah notifikasi pending untuk staff
+            $countPending = Reservasi::where('Status', 'menunggu')->count();
+            return view('staff_klinik.jadwaldokter', compact('data', 'countPending'));
         } elseif (str_contains(request()->path(), 'admin')) {
             return view('admin.jadwal_index', compact('data'));
         }
-        
+
         return view('jadwal.index', compact('data'));
     }
 
